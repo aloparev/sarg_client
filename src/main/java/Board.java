@@ -172,22 +172,28 @@ public class Board {
         turn = (turn + 1) % 3;
     }
 
+    /**
+     * shift received move from player map to free map
+     * and simulate user stone change
+     * @param playerId
+     * @param moveKey of newly received
+     */
     void updatePlayer(int playerId, int moveKey) {
-                Move ans = null;
+        Move thisMove = null;
 
         switch(playerId) {
             case 0:
-                Move thisMove = red.get(moveKey);
+                thisMove = red.get(moveKey);
                 red.remove(moveKey);
 
                 free.put(moveKey, thisMove);
                 redMove(moveKey);
                 break;
             case 1:
-                ans = greenMove();
+                thisMove = greenMove();
                 break;
             case 2:
-                ans = blueMove();
+                thisMove = blueMove();
                 break;
         }
     }
@@ -232,6 +238,10 @@ public class Board {
         return ans;
     }
 
+    /**
+     * following move is split into left and right
+     * @param mm
+     */
     void redMove(int mm) {
         int leftMoveKey = getKeyLeft(mm, 0);
         Move leftMove = free.get(leftMoveKey);
@@ -254,6 +264,12 @@ public class Board {
         return new Move(0, 0);
     }
 
+    /**
+     * find which map includes the move
+     * and thereby player who did the move
+     * @param moveKey
+     * @return
+     */
     int getPlayer(int moveKey) {
         int ans = -1;
 
@@ -269,46 +285,18 @@ public class Board {
         return ans;
     }
 
-    int getKeyForMove(Move mm) {
+    /**
+     * extract move coordinates
+     * which are used as a map key
+     * @param move
+     * @return
+     */
+    int getKeyForMove(Move move) {
         int ans = 0;
-        int x = mm.x;
-        int y = mm.y;
+        int x = move.x;
+        int y = move.y;
 
         ans = ans + (x * 10) + y;
         return ans;
     }
-
-//    int[][] ar = new int[9][9];
-
-//
-//        ar[0][5] = -1;
-//        ar[0][6] = -1;
-//        ar[0][7] = -1;
-//        ar[0][8] = -1;
-//        ar[1][6] = -1;
-//        ar[1][7] = -1;
-//        ar[1][8] = -1;
-//        ar[2][7] = -1;
-//        ar[2][8] = -1;
-//        ar[3][8] = -1;
-//
-//        ar[5][0] = -1;
-//        ar[6][0] = -1;
-//        ar[7][0] = -1;
-//        ar[8][0] = -1;
-//        ar[6][1] = -1;
-//        ar[7][1] = -1;
-//        ar[8][1] = -1;
-//        ar[7][2] = -1;
-//        ar[8][2] = -1;
-//        ar[8][3] = -1;
-//
-//        // red
-//        ar[0][0] = 0;
-//        ar[1][0] = 0;
-//        ar[2][0] = 0;
-//        ar[3][0] = 0;
-//        ar[4][0] = 0;
-//    }
-
 }
