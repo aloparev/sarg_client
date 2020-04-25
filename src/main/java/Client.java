@@ -4,6 +4,7 @@ import lenz.htw.sarg.net.NetworkClient;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,29 +26,33 @@ public class Client {
         Logger log = LoggerFactory.getLogger(Client.class);
         log.info("client up :)\thost=" + host + " team=" + teamName + " picture=" + picPath);
 
+
+
         // initialisieren... z.B. Spielbrett
-        Board board = new Board();
         NetworkClient nc = new NetworkClient(host, teamName, ImageIO.read(new File(picPath)));
+        Board board = new Board(nc.getMyPlayerNumber());
 
 //        nc.getTimeLimitInSeconds();
 //        System.out.println(nc.getExpectedNetworkLatencyInMilliseconds());
 //        System.out.println("3 started player = " + nc.getMyPlayerNumber());
 
-        board.owner = nc.getMyPlayerNumber();
-
         while (true) {
             Move newMove = nc.receiveMove();
-            log.info(newMove.toString());
 
             if (newMove == null) {
-                log.info("ich bin dran");
+                log.info("move=null >> ich bin dran: " + board.owner);
+
+                Scanner sc = new Scanner(System.in);
+                int x = Integer.parseInt(sc.nextLine());
+                int y = Integer.parseInt(sc.nextLine());
+//                sc.close();
+                log.info("x=" + x + " y=" + y);
 
 //                newMove = findeCleverenZug();
-                newMove = new Move(0,1);
-                nc.sendMove(newMove);
+                nc.sendMove(new Move(x,y));
             }
             else {
-                log.info("// integriereZugInSpielbrett(move);");
+                log.info("integriereZugInSpielbrett: " + newMove);
                 board.updateBoard(newMove);
             }
 

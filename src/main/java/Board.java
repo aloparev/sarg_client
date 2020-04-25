@@ -11,7 +11,7 @@ import java.util.TreeSet;
  */
 public class Board {
 
-    /**
+    /*
      * all possible moves are stored in different maps
      * when the players move their stones the stone objects are moved from one map to another
      * usually it's from <free> to one player or vice versa
@@ -27,14 +27,14 @@ public class Board {
     TreeMap<Integer, Move> blue;
     TreeSet<Integer> blueMargin;
 
-    /**
+    /*
      * player scores are stored in the array
      * where the array index also corresponds to the player id
      * 0=red 1=green 2=blue
      */
     int[] scores;
 
-    /**
+    /*
      * keeps track of active players
      * storage analogue to the score array
      */
@@ -42,7 +42,8 @@ public class Board {
     int turn;
     int owner;
 
-    public Board() {
+    public Board(int player) {
+        this.owner = player;
         this.scores = new int[] {0, 0, 0};
         this.activePlayers = new boolean[] {true, true, true};
         this.turn = 2;
@@ -131,34 +132,38 @@ public class Board {
 
 //        last fields before jumping off the board
         this.redMargin = new TreeSet<Integer>() {{
-            add(4);
-            add(15);
-            add(26);
-            add(37);
-            add(48);
-            add(58);
-            add(68);
-            add(78);
-            add(88);
-            add(87);
-            add(86);
-            add(85);
-            add(84);
+            add(5);
+            add(16);
+            add(27);
+            add(38);
+
+            add(49);
+            add(59);
+            add(69);
+            add(79);
+            add(89);
+
+            add(99);
+            add(98);
+            add(97);
+            add(96);
+            add(95);
         }};
     }
 
 //    general update work flow
     void updateBoard(Move newMove) {
+
 //        iterate who's turn it is
         incrementTurn();
 
 //        find key from the received move
-        int moveKey = getKeyForMove(newMove);
+        int moveKey = getMoveKey(newMove);
 
-//        find owner of that stone
+//        find move owner
         int playerReal = getPlayer(moveKey);
 
-//        compare real and planed player and disable when not equal
+//        compare real and planed player and disable if not equal
         if(playerReal != turn) {
             activePlayers[turn] = false;
             incrementTurn();
@@ -168,8 +173,16 @@ public class Board {
         updatePlayer(playerReal, moveKey);
     }
 
+    /**
+     * player turn iterator
+     * skip inactive players
+     */
     void incrementTurn() {
         turn = (turn + 1) % 3;
+
+//        if or while should work
+        while(!activePlayers[turn])
+            turn = (turn + 1) % 3;
     }
 
     /**
@@ -179,79 +192,83 @@ public class Board {
      * @param moveKey of newly received
      */
     void updatePlayer(int playerId, int moveKey) {
-        Move thisMove = null;
-
         switch(playerId) {
             case 0:
-                thisMove = red.get(moveKey);
-                red.remove(moveKey);
-
-                free.put(moveKey, thisMove);
+                removeFromRed(moveKey);
                 redMove(moveKey);
                 break;
             case 1:
-                thisMove = greenMove();
                 break;
             case 2:
-                thisMove = blueMove();
                 break;
         }
     }
 
-    int getKeyLeft(int start, int pid) {
-        int ans = -1;
-
-        switch(pid) {
-            case 0:
-                for(int i = start; i < 9; i++)
-//                    if(redMargin.contains(i))
-//                        return i;
-                    if(free.containsKey(i)) {
-                        if (redMargin.contains(i))
-                            scores[pid]++;
-                        return i;
-                    }
-            case 1:
-                break;
-            case 2:
-                break;
-        }
-        return ans;
+    private void removeFromRed(int moveKey) {
+        free.put(moveKey, red.get(moveKey));
+        red.remove(moveKey);
     }
 
-    int getKeyRight(int start, int pid) {
-        int ans = -1;
-
-        switch(pid) {
-            case 0:
-                for(int i = start; i < 99; i = i+11)
-                    if(free.containsKey(i)) {
-                        if (redMargin.contains(i))
-                            scores[pid]++;
-                        return i;
-                    }
-            case 1:
-                break;
-            case 2:
-                break;
-        }
-        return ans;
+    private void addToRed(int moveKey) {
+        red.put(moveKey, free.get(moveKey));
+        free.remove(moveKey);
     }
 
     /**
      * following move is split into left and right
-     * @param mm
+     * @param moveKey
      */
-    void redMove(int mm) {
-        int leftMoveKey = getKeyLeft(mm, 0);
-        Move leftMove = free.get(leftMoveKey);
-        free.remove(leftMoveKey);
-        red.put(leftMoveKey, leftMove);
+    void redMove(int moveKey) {
+        int leftMoveKey = getKeyLeft(0, moveKey);
+        addToRed(leftMoveKey);
 
-        int rightMoveKey = getKeyRight(mm, 0);
-        Move rightMove = free.get(rightMoveKey);
-        free.remove(rightMoveKey);
-        red.put(rightMoveKey, rightMove);
+        int rightMoveKey = getKeyRight(0, moveKey);
+        addToRed(rightMoveKey);
+    }
+
+    int getKeyLeft(int playerId, int start) {
+        int ans = -1;
+
+        switch(playerId) {
+            case 0:
+                for(int i = start; i < 9; i++) {
+
+//                    there is a free spot on the board
+                    if(free.containsKey(i))
+                        return i;
+
+//                    stone reached the board end
+                    if (redMargin.contains(i))
+                        scores[playerId]++;
+                }
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+        return ans;
+    }
+
+    int getKeyRight(int playerId, int start) {
+        int ans = -1;
+
+        switch(playerId) {
+            case 0:
+                for(int i = start; i < 99; i = i+11) {
+                    if(free.containsKey(i))
+                        return i;
+
+                    if (redMargin.contains(i))
+                        scores[playerId]++;
+                    }
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+        return ans;
     }
 
     static Move greenMove() {
@@ -291,7 +308,7 @@ public class Board {
      * @param move
      * @return
      */
-    int getKeyForMove(Move move) {
+    int getMoveKey(Move move) {
         int ans = 0;
         int x = move.x;
         int y = move.y;
