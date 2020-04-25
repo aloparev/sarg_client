@@ -10,6 +10,6 @@ public class BoardTest {
         assertTrue(board.scores.length == 3);
         assertArrayEquals(new int[] {0,0,0,}, board.scores);
 
-        assertTrue(board.turn == 0);
+        assertTrue(board.currPlayer == 0);
     }
 }

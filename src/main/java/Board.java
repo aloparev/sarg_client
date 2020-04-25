@@ -38,7 +38,7 @@ public class Board {
      * keeps track of active players
      * storage analogue to the score array
      */
-    int turn;
+    int currPlayer;
     int owner;
 
     public Board(int player) {
@@ -155,20 +155,19 @@ public class Board {
         int moveKey = getMoveKey(newMove);
 
 //        find move owner
-        int turn = getPlayer(moveKey);
+        this.currPlayer = getPlayer(moveKey);
 
 //        propagate new move
-        updatePlayer(turn, moveKey);
+        updatePlayer(moveKey);
     }
 
     /**
      * shift received move from player map to free map
      * and simulate user stone change
-     * @param playerId
      * @param moveKey of newly received
      */
-    void updatePlayer(int playerId, int moveKey) {
-        switch(playerId) {
+    void updatePlayer(int moveKey) {
+        switch(this.currPlayer) {
             case 0:
                 removeFromRed(moveKey);
                 redMove(moveKey);
@@ -195,17 +194,17 @@ public class Board {
      * @param moveKey
      */
     void redMove(int moveKey) {
-        int leftMoveKey = getKeyLeft(0, moveKey);
+        int leftMoveKey = getKeyLeft(moveKey);
         addToRed(leftMoveKey);
 
-        int rightMoveKey = getKeyRight(0, moveKey);
+        int rightMoveKey = getKeyRight(moveKey);
         addToRed(rightMoveKey);
     }
 
-    int getKeyLeft(int playerId, int start) {
+    int getKeyLeft(int start) {
         int ans = -1;
 
-        switch(playerId) {
+        switch(this.currPlayer) {
             case 0:
                 for(int i = start; i < 9; i++) {
 
@@ -215,7 +214,7 @@ public class Board {
 
 //                    stone reached the board end
                     if (redMargin.contains(i))
-                        scores[playerId]++;
+                        updateScores();
                 }
                 break;
             case 1:
@@ -226,17 +225,17 @@ public class Board {
         return ans;
     }
 
-    int getKeyRight(int playerId, int start) {
+    int getKeyRight(int start) {
         int ans = -1;
 
-        switch(playerId) {
+        switch(this.currPlayer) {
             case 0:
                 for(int i = start; i < 99; i = i+11) {
                     if(free.containsKey(i))
                         return i;
 
                     if (redMargin.contains(i))
-                        scores[playerId]++;
+                        updateScores();
                     }
                 break;
             case 1:
@@ -291,5 +290,9 @@ public class Board {
 
         ans = ans + (x * 10) + y;
         return ans;
+    }
+
+    private void updateScores() {
+        this.scores[this.currPlayer]++;
     }
 }
