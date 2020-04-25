@@ -38,15 +38,12 @@ public class Board {
      * keeps track of active players
      * storage analogue to the score array
      */
-    boolean[] activePlayers;
     int turn;
     int owner;
 
     public Board(int player) {
         this.owner = player;
         this.scores = new int[] {0, 0, 0};
-        this.activePlayers = new boolean[] {true, true, true};
-        this.turn = 2;
 
 //        all free fields
         this.free = new TreeMap<Integer, Move>() {{
@@ -154,35 +151,14 @@ public class Board {
 //    general update work flow
     void updateBoard(Move newMove) {
 
-//        iterate who's turn it is
-        incrementTurn();
-
 //        find key from the received move
         int moveKey = getMoveKey(newMove);
 
 //        find move owner
-        int playerReal = getPlayer(moveKey);
-
-//        compare real and planed player and disable if not equal
-        if(playerReal != turn) {
-            activePlayers[turn] = false;
-            incrementTurn();
-        }
+        int turn = getPlayer(moveKey);
 
 //        propagate new move
-        updatePlayer(playerReal, moveKey);
-    }
-
-    /**
-     * player turn iterator
-     * skip inactive players
-     */
-    void incrementTurn() {
-        turn = (turn + 1) % 3;
-
-//        if or while should work
-        while(!activePlayers[turn])
-            turn = (turn + 1) % 3;
+        updatePlayer(turn, moveKey);
     }
 
     /**
