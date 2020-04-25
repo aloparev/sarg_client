@@ -1,5 +1,8 @@
 import lenz.htw.sarg.Move;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -10,6 +13,7 @@ import java.util.TreeSet;
  * with score being the player loss function
  */
 public class Board {
+    Logger log = LoggerFactory.getLogger(Client.class);
 
     /*
      * all possible moves are stored in different maps
@@ -41,9 +45,9 @@ public class Board {
     int currPlayer;
     int owner;
 
-    public Board(int player) {
-        this.owner = player;
-        this.scores = new int[] {0, 0, 0};
+    public Board(int owner) {
+        this.owner = owner;
+        scores = new int[] {0, 0, 0};
 
 //        all free fields
         this.free = new TreeMap<Integer, Move>() {{
@@ -155,7 +159,7 @@ public class Board {
         int moveKey = getMoveKey(newMove);
 
 //        find move owner
-        this.currPlayer = getPlayer(moveKey);
+        currPlayer = getPlayer(moveKey);
 
 //        propagate new move
         updatePlayer(moveKey);
@@ -167,10 +171,12 @@ public class Board {
      * @param moveKey of newly received
      */
     void updatePlayer(int moveKey) {
-        switch(this.currPlayer) {
+        switch(currPlayer) {
             case 0:
-                removeFromRed(moveKey);
+//                log.info(String.valueOf(red));
                 redMove(moveKey);
+                removeFromRed(moveKey);
+//                log.info(String.valueOf(red));
                 break;
             case 1:
                 break;
@@ -179,12 +185,14 @@ public class Board {
         }
     }
 
-    private void removeFromRed(int moveKey) {
+    void removeFromRed(int moveKey) {
         free.put(moveKey, red.get(moveKey));
+//        log.info(String.valueOf(free));
         red.remove(moveKey);
+//        log.info(String.valueOf(red));
     }
 
-    private void addToRed(int moveKey) {
+    void addToRed(int moveKey) {
         red.put(moveKey, free.get(moveKey));
         free.remove(moveKey);
     }
@@ -194,27 +202,41 @@ public class Board {
      * @param moveKey
      */
     void redMove(int moveKey) {
+        log.info("redMove.moveKey=" + moveKey);
         int leftMoveKey = getKeyLeft(moveKey);
-        addToRed(leftMoveKey);
+        if(leftMoveKey != -1) {
+            log.info("redMove.leftMoveKey=" + leftMoveKey);
+            red.put(leftMoveKey, free.get(leftMoveKey));
+            free.remove(leftMoveKey);
+        }
+//        log.info(String.valueOf(leftMoveKey));
+//        log.info(String.valueOf(red));
 
         int rightMoveKey = getKeyRight(moveKey);
-        addToRed(rightMoveKey);
+        if(rightMoveKey != -1) {
+            red.put(rightMoveKey, free.get(rightMoveKey));
+            free.remove(rightMoveKey);
+//        log.info(String.valueOf(red));
+        }
     }
 
     int getKeyLeft(int start) {
         int ans = -1;
 
-        switch(this.currPlayer) {
+        switch(currPlayer) {
             case 0:
                 for(int i = start; i < 9; i++) {
+
+//                    stone reached the board end
+                    if (redMargin.contains(i)) {
+                        log.info("redMargin.contains=" + i);
+                        updatePlayerScores();
+                        break;
+                    }
 
 //                    there is a free spot on the board
                     if(free.containsKey(i))
                         return i;
-
-//                    stone reached the board end
-                    if (redMargin.contains(i))
-                        updateScores();
                 }
                 break;
             case 1:
@@ -228,15 +250,19 @@ public class Board {
     int getKeyRight(int start) {
         int ans = -1;
 
-        switch(this.currPlayer) {
+        switch(currPlayer) {
             case 0:
                 for(int i = start; i < 99; i = i+11) {
-                    if(free.containsKey(i))
-                        return i;
 
-                    if (redMargin.contains(i))
-                        updateScores();
+                    if (redMargin.contains(i)) {
+                        updatePlayerScores();
+                        break;
                     }
+
+                    if(free.containsKey(i)) {
+                        return i;
+                    }
+                }
                 break;
             case 1:
                 break;
@@ -292,7 +318,44 @@ public class Board {
         return ans;
     }
 
-    private void updateScores() {
-        this.scores[this.currPlayer]++;
+    private void updatePlayerScores() {
+        log.info("scores++");
+        scores[currPlayer]++;
+    }
+
+    int evaluateBoard(int playerId) {
+        int ans = -1;
+
+        switch(playerId) {
+            case 0:
+                return red.size() * 100 / 61 + scores[0] * 10;
+            case 1:
+                return green.size() * 100 / 61 + scores[1] * 10;
+            case 2:
+                return blue.size() * 100 / 61 + scores[2] * 10;
+        }
+        return ans;
+    }
+
+    int getStonesOfPlayerX(int playerId) {
+        int ans = -1;
+
+        switch(playerId) {
+            case 0:
+                return red.size();
+            case 1:
+                return green.size();
+            case 2:
+                return blue.size();
+        }
+        return ans;
+    }
+
+    @Override
+    public String toString() {
+        return "board owner=" + owner + " scores=" + Arrays.toString(scores) + " currPlayer=" + currPlayer
+                + " red stones=" + red + "\n" +
+                "green stones=" + green + " blue stones=" + blue + "\n" +
+                "free=" + free;
     }
 }
