@@ -33,8 +33,8 @@ public class RedBoardTest {
     @Test
     public void boardInit() {
         assertEquals(0, bb.owner);
-        assertTrue(bb.scores.length == 3);
-        assertArrayEquals(new int[] {0,0,0,}, bb.scores);
+        assertTrue(bb.points.length == 3);
+        assertArrayEquals(new int[] {0,0,0,}, bb.points);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class RedBoardTest {
 
     @Test
     public void updatePlayer0() {
-        bb.currPlayer = rid;
+        bb.curPlayer = rid;
         bb.updatePlayer(move0key);
 
         TreeMap<Integer, Move> expectedRedStones;
@@ -113,19 +113,19 @@ public class RedBoardTest {
 
     @Test
     public void evaluateBoard() {
-        assertEquals(8, bb.evaluateBoard(rid));
+        assertEquals(8, bb.getBoardValueForPlayerX(rid));
 
         bb.red.put(1, new Move(0, 1));
         bb.red.put(11, new Move(1, 1));
-        assertEquals(11, bb.evaluateBoard(rid));
+        assertEquals(11, bb.getBoardValueForPlayerX(rid));
 
-        bb.scores[rid] = 2;
-        assertEquals(31, bb.evaluateBoard(rid));
+        bb.points[rid] = 2;
+        assertEquals(31, bb.getBoardValueForPlayerX(rid));
     }
 
     @Test
     public void updatePlayer3() {
-        bb.currPlayer = rid;
+        bb.curPlayer = rid;
         bb.free.remove(move3key);
         bb.red.put(move3key, move3);
 //        log.info("boards.red=" + bb.red);
@@ -145,7 +145,7 @@ public class RedBoardTest {
 //        log.info("boards.red=" + bb.red);
 //        log.info("boards.free=" + bb.free);
         assertTrue(expectedRedStones.keySet().equals(bb.red.keySet()));
-        assertEquals(1, bb.scores[rid]);
+        assertEquals(1, bb.points[rid]);
     }
 
 }

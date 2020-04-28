@@ -12,8 +12,8 @@ import java.util.TreeSet;
  * who's turn it is, stones positions and score
  * with score being the player loss function
  */
-public class Board {
-    Logger log = LoggerFactory.getLogger(Client.class);
+public class Board implements Cloneable {
+    Logger log = LoggerFactory.getLogger(Board.class);
 
     /*
      * all possible moves are stored in different maps
@@ -36,18 +36,25 @@ public class Board {
      * where the array index also corresponds to the player id
      * 0=red 1=green 2=blue
      */
-    int[] scores;
+    int[] points;
+
+    boolean[] kicked;
+    int expPlayer;
 
     /*
      * keeps track of active players
      * storage analogue to the score array
      */
-    int currPlayer;
+    int curPlayer;
     int owner;
 
     public Board(int owner) {
         this.owner = owner;
-        scores = new int[] {0, 0, 0};
+        points = new int[] {0, 0, 0};
+        kicked = new boolean[] {false, false, false};
+
+//        red always begin
+        expPlayer = 0;
 
 //        all free fields
         this.free = new TreeMap<Integer, Move>() {{
@@ -159,10 +166,39 @@ public class Board {
         int moveKey = getMoveKey(newMove);
 
 //        find move owner
-        currPlayer = getPlayer(moveKey);
+        curPlayer = getPlayer(moveKey);
+
+//        sync who's turn it is
+        if(expPlayer != curPlayer) {
+            kicked[expPlayer] = true;
+            expPlayer = curPlayer;
+        }
+        incrementExpPlayer();
 
 //        propagate new move
         updatePlayer(moveKey);
+    }
+
+    void updateBoard(Move newMove, boolean simulation) {
+        int moveKey = getMoveKey(newMove);
+        curPlayer = getPlayer(moveKey);
+
+//        sync who's turn it is
+        if(!simulation && expPlayer != curPlayer) {
+            kicked[expPlayer] = true;
+            expPlayer = curPlayer;
+        }
+        incrementExpPlayer();
+
+//        propagate new move
+        updatePlayer(moveKey);
+    }
+
+    void incrementExpPlayer() {
+        expPlayer = (expPlayer + 1) % 3;
+
+        if(kicked[expPlayer])
+            expPlayer = (expPlayer + 1) % 3;
     }
 
     /**
@@ -171,7 +207,7 @@ public class Board {
      * @param moveKey of newly received
      */
     void updatePlayer(int moveKey) {
-        switch(currPlayer) {
+        switch(curPlayer) {
             case 0:
 //                log.info(String.valueOf(red));
                 redMove(moveKey);
@@ -223,7 +259,7 @@ public class Board {
     int getKeyLeft(int start) {
         int ans = -1;
 
-        switch(currPlayer) {
+        switch(curPlayer) {
             case 0:
                 for(int i = start; i < 9; i++) {
 
@@ -250,7 +286,7 @@ public class Board {
     int getKeyRight(int start) {
         int ans = -1;
 
-        switch(currPlayer) {
+        switch(curPlayer) {
             case 0:
                 for(int i = start; i < 99; i = i+11) {
 
@@ -320,24 +356,24 @@ public class Board {
 
     private void updatePlayerScores() {
         log.info("scores++");
-        scores[currPlayer]++;
+        points[curPlayer]++;
     }
 
-    int evaluateBoard(int playerId) {
+    int getBoardValueForPlayerX(int playerId) {
         int ans = -1;
 
         switch(playerId) {
             case 0:
-                return red.size() * 100 / 61 + scores[0] * 10;
+                return red.size() * 100 / 61 + points[0] * 10;
             case 1:
-                return green.size() * 100 / 61 + scores[1] * 10;
+                return green.size() * 100 / 61 + points[1] * 10;
             case 2:
-                return blue.size() * 100 / 61 + scores[2] * 10;
+                return blue.size() * 100 / 61 + points[2] * 10;
         }
         return ans;
     }
 
-    int getStonesOfPlayerX(int playerId) {
+    int getStonesAmountOfPlayerX(int playerId) {
         int ans = -1;
 
         switch(playerId) {
@@ -353,9 +389,13 @@ public class Board {
 
     @Override
     public String toString() {
-        return "board owner=" + owner + " scores=" + Arrays.toString(scores) + " currPlayer=" + currPlayer
+        return "board owner=" + owner + " scores=" + Arrays.toString(points) + " currPlayer=" + curPlayer
                 + " red stones=" + red + "\n" +
                 "green stones=" + green + " blue stones=" + blue + "\n" +
                 "free=" + free;
+    }
+
+    public Board clone() throws CloneNotSupportedException {
+        return (Board) super.clone();
     }
 }
