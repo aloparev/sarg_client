@@ -137,7 +137,7 @@ public class Board implements Cloneable {
             put(88, new Move(8, 8));
         }};
 
-//        last fields before jumping off the board
+//        off the board fields as the absolute destination
         this.redMargin = new TreeSet<Integer>() {{
             add(5);
             add(16);
@@ -155,6 +155,16 @@ public class Board implements Cloneable {
             add(97);
             add(96);
             add(95);
+        }};
+
+        this.greenMargin = new TreeSet<Integer>() {{
+//            add(5);
+
+        }};
+
+        this.blueMargin = new TreeSet<Integer>() {{
+//            add(5);
+
         }};
     }
 
@@ -181,14 +191,12 @@ public class Board implements Cloneable {
     void updateBoard(int moveKey) {
         curPlayer = getPlayer(moveKey);
 
-//        sync who's turn it is
         if(expPlayer != curPlayer) {
             kicked[expPlayer] = true;
             expPlayer = curPlayer;
         }
-        incrementExpPlayer();
 
-//        propagate new move
+        incrementExpPlayer();
         updatePlayer(moveKey);
     }
 
@@ -213,8 +221,12 @@ public class Board implements Cloneable {
 //                log.info(String.valueOf(red));
                 break;
             case 1:
+                greenMove(moveKey);
+                removeFromGreen(moveKey);
                 break;
             case 2:
+                blueMove(moveKey);
+                removeFromBlue(moveKey);
                 break;
         }
     }
@@ -224,6 +236,16 @@ public class Board implements Cloneable {
 //        log.info(String.valueOf(free));
         red.remove(moveKey);
 //        log.info(String.valueOf(red));
+    }
+
+    void removeFromGreen(int moveKey) {
+        free.put(moveKey, green.get(moveKey));
+        green.remove(moveKey);
+    }
+
+    void removeFromBlue(int moveKey) {
+        free.put(moveKey, blue.get(moveKey));
+        blue.remove(moveKey);
     }
 
     void addToRed(int moveKey) {
@@ -306,14 +328,42 @@ public class Board implements Cloneable {
         return ans;
     }
 
-    static Move greenMove() {
+    void greenMove(int moveKey) {
+//        log.info("redMove.moveKey=" + moveKey);
+        int leftMoveKey = getKeyLeft(moveKey);
+        if(leftMoveKey != -1) {
+//            log.info("redMove.leftMoveKey=" + leftMoveKey);
+            green.put(leftMoveKey, free.get(leftMoveKey));
+            free.remove(leftMoveKey);
+        }
+//        log.info(String.valueOf(leftMoveKey));
+//        log.info(String.valueOf(red));
 
-        return new Move(0, 0);
+        int rightMoveKey = getKeyRight(moveKey);
+        if(rightMoveKey != -1) {
+            green.put(rightMoveKey, free.get(rightMoveKey));
+            free.remove(rightMoveKey);
+//        log.info(String.valueOf(red));
+        }
     }
 
-    static Move blueMove() {
+    void blueMove(int moveKey) {
+//        log.info("redMove.moveKey=" + moveKey);
+        int leftMoveKey = getKeyLeft(moveKey);
+        if(leftMoveKey != -1) {
+//            log.info("redMove.leftMoveKey=" + leftMoveKey);
+            blue.put(leftMoveKey, free.get(leftMoveKey));
+            free.remove(leftMoveKey);
+        }
+//        log.info(String.valueOf(leftMoveKey));
+//        log.info(String.valueOf(red));
 
-        return new Move(0, 0);
+        int rightMoveKey = getKeyRight(moveKey);
+        if(rightMoveKey != -1) {
+            blue.put(rightMoveKey, free.get(rightMoveKey));
+            free.remove(rightMoveKey);
+//        log.info(String.valueOf(red));
+        }
     }
 
     /**
