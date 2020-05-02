@@ -53,7 +53,7 @@ public class Board implements Cloneable {
         points = new int[] {0, 0, 0};
         kicked = new boolean[] {false, false, false};
 
-//        red always begin
+//        red always starts
         expPlayer = 0;
 
 //        all free fields
@@ -179,12 +179,11 @@ public class Board implements Cloneable {
         updatePlayer(moveKey);
     }
 
-    void updateBoard(Move newMove, boolean simulation) {
-        int moveKey = getMoveKey(newMove);
+    void updateBoard(int moveKey) {
         curPlayer = getPlayer(moveKey);
 
 //        sync who's turn it is
-        if(!simulation && expPlayer != curPlayer) {
+        if(expPlayer != curPlayer) {
             kicked[expPlayer] = true;
             expPlayer = curPlayer;
         }
