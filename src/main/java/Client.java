@@ -42,14 +42,15 @@ public class Client {
             if (newMove == null) {
                 log.info("move=null >> ich bin dran: " + board.owner);
 
-                Scanner sc = new Scanner(System.in);
-                int x = Integer.parseInt(sc.nextLine());
-                int y = Integer.parseInt(sc.nextLine());
+//                Scanner sc = new Scanner(System.in);
+//                int x = Integer.parseInt(sc.nextLine());
+//                int y = Integer.parseInt(sc.nextLine());
 //                sc.close();
 //                log.info("x=" + x + " y=" + y);
+//                nc.sendMove(new Move(x,y));
 
-//                newMove = findeCleverenZug();
-                nc.sendMove(new Move(x,y));
+                newMove = Logic.getBestMove(board);
+                nc.sendMove(newMove);
             }
             else {
                 log.info("integriereZugInSpielbrett: " + newMove);

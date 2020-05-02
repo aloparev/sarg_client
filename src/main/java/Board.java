@@ -7,10 +7,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * represents "game configuration"
- * since it includes all core elements:
+ * represents the "game configuration"
+ * since it includes all the crucial elements:
  * who's turn it is, stones positions and score
- * with score being the player loss function
  */
 public class Board implements Cloneable {
     Logger log = LoggerFactory.getLogger(Board.class);
@@ -237,10 +236,10 @@ public class Board implements Cloneable {
      * @param moveKey
      */
     void redMove(int moveKey) {
-        log.info("redMove.moveKey=" + moveKey);
+//        log.info("redMove.moveKey=" + moveKey);
         int leftMoveKey = getKeyLeft(moveKey);
         if(leftMoveKey != -1) {
-            log.info("redMove.leftMoveKey=" + leftMoveKey);
+//            log.info("redMove.leftMoveKey=" + leftMoveKey);
             red.put(leftMoveKey, free.get(leftMoveKey));
             free.remove(leftMoveKey);
         }
@@ -264,7 +263,7 @@ public class Board implements Cloneable {
 
 //                    stone reached the board end
                     if (redMargin.contains(i)) {
-                        log.info("redMargin.contains=" + i);
+//                        log.info("redMargin.contains=" + i);
                         updatePlayerScores();
                         break;
                     }
@@ -354,11 +353,11 @@ public class Board implements Cloneable {
     }
 
     private void updatePlayerScores() {
-        log.info("scores++");
+//        log.info("scores++");
         points[curPlayer]++;
     }
 
-    int getBoardValueForPlayerX(int playerId) {
+    int getPointsForPlayerXv1(int playerId) {
         int ans = -1;
 
         switch(playerId) {
@@ -388,10 +387,10 @@ public class Board implements Cloneable {
 
     @Override
     public String toString() {
-        return "board owner=" + owner + " scores=" + Arrays.toString(points) + " currPlayer=" + curPlayer
-                + " red stones=" + red + "\n" +
-                "green stones=" + green + " blue stones=" + blue + "\n" +
-                "free=" + free;
+        return "board owner=" + owner + " scores=" + Arrays.toString(points) + " curPlayer=" + curPlayer
+                + " expPlayer=" + expPlayer + " kicked=" + Arrays.toString(kicked)
+                + " red stones=" + red.keySet() + " green stones=" + green.keySet() + " blue stones=" + blue.keySet()
+                + "\n" + "free=" + free.keySet();
     }
 
     public Board clone() throws CloneNotSupportedException {

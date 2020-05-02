@@ -14,8 +14,8 @@ public class RedBoardTest {
     static Board bb;
 
     static Move move0;
-    static Move move3
-            ;
+    static Move move3;
+
     static int move0key = 0;
     static int move3key = 3;
 
@@ -25,7 +25,7 @@ public class RedBoardTest {
 
     @Before
     public void setup() {
-        bb = new Board(0);
+        bb = new Board(rid);
         move0 = new Move(0, 0);
         move3 = new Move(0, 3);
     }
@@ -113,14 +113,14 @@ public class RedBoardTest {
 
     @Test
     public void evaluateBoard() {
-        assertEquals(8, bb.getBoardValueForPlayerX(rid));
+        assertEquals(8, bb.getPointsForPlayerXv1(rid));
 
         bb.red.put(1, new Move(0, 1));
         bb.red.put(11, new Move(1, 1));
-        assertEquals(11, bb.getBoardValueForPlayerX(rid));
+        assertEquals(11, bb.getPointsForPlayerXv1(rid));
 
         bb.points[rid] = 2;
-        assertEquals(31, bb.getBoardValueForPlayerX(rid));
+        assertEquals(31, bb.getPointsForPlayerXv1(rid));
     }
 
     @Test
