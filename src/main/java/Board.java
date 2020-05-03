@@ -11,7 +11,7 @@ import java.util.TreeSet;
  * since it includes all the crucial elements:
  * who's turn it is, stones positions and score
  */
-public class Board implements Cloneable {
+public class Board {
     Logger log = LoggerFactory.getLogger(Board.class);
 
     /*
@@ -194,6 +194,24 @@ public class Board implements Cloneable {
             add(19);
             add(29);
         }};
+    }
+    public Board(Board that) {
+//        non primitives reassignment
+        this.free = new TreeMap<>(that.free);
+        this.red = new TreeMap<>(that.red);
+        this.green = new TreeMap<>(that.green);
+        this.blue = new TreeMap<>(that.blue);
+
+        this.redMargin = that.redMargin;
+        this.greenMargin = that.greenMargin;
+        this.blueMargin = that.blueMargin;
+
+//        primitives clone
+        this.points = that.points.clone();
+        this.kicked = that.kicked.clone();
+        this.expPlayer = that.expPlayer;
+        this.curPlayer = that.curPlayer;
+        this.owner = that.owner;
     }
 
 //    general update work flow
@@ -550,7 +568,7 @@ public class Board implements Cloneable {
                 + "\n" + "free=" + free.keySet();
     }
 
-    public Board clone() throws CloneNotSupportedException {
-        return (Board) super.clone();
-    }
+//    public Board clone() throws CloneNotSupportedException {
+//        return (Board) super.clone();
+//    }
 }

@@ -50,11 +50,11 @@ public class Logic {
 
                 threads[i] = new Thread(() -> {
                     try {
-                        scores[ii] = getMovePointsForDepthX(baseBoard.clone(), key, 1, -1);
+                        scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, 1, -1);
                         log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner);
-                    } catch (CloneNotSupportedException cnse) {
-                        cnse.printStackTrace();
-                        System.out.println("Running thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner + " failed");
+//                    } catch (CloneNotSupportedException cnse) {
+//                        cnse.printStackTrace();
+//                        System.out.println("Running thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner + " failed");
                     } catch (NullPointerException npe) {
                         npe.printStackTrace();
                     }
@@ -120,17 +120,20 @@ public class Logic {
         int bestMoveKey = -1;
         int bestPoints = -1;
         int points;
+        Board branch;
 //        TreeMap<Integer, Move> moves = null;
         List<Integer> moves = Collections.emptyList();
 //        int size = root.getStonesAmountOfPlayerX(playerId);
 //        List<Move> moves = new ArrayList<>(size);
 //        int[] scores = new int[size];
 //        TreeSet<Integer> bestPoints = new TreeSet<>();
+        log.info("searching best move from scope for user=" + playerId + " and board=" + root);
 
         switch(playerId) {
             case 0:
                 moves = new ArrayList<>(root.red.keySet());
 //                moves = root.red;
+                log.info("moves init=" + moves);
                 break;
             case 1:
 //                moves = root.green;
@@ -148,21 +151,24 @@ public class Logic {
 //            log.info("start args: board=" + root + " pid=" + playerId + " moves.size=" + moves.size());
 
 //            for(Map.Entry<Integer, Move> mm : moves.entrySet())
-            for (int moveKey : moves)
-                try {
-                    Board branch = root.clone();
+            for (int moveKey : moves) {
+//                try {
+//                    Board branch = root.clone();
+                    branch = new Board(root);
+                    log.info("branch before=" + branch);
                     branch.updateBoard(moveKey);
-//                    branch.updateBoard(mm.getValue());
                     points = branch.getPointsForPlayerXv1(playerId);
+
                     if (points > bestPoints) {
                         bestPoints = points;
                         bestMoveKey = moveKey;
                     }
-                } catch (CloneNotSupportedException ee) {
-                    ee.printStackTrace();
+//                } catch (CloneNotSupportedException ee) {
+//                    ee.printStackTrace();
                 }
         }
 
+//        log.info("best move from scope is [" + bestMoveKey + "] with points= " + bestPoints);
         return new RankedMove(bestMoveKey, bestPoints);
     }
 }
