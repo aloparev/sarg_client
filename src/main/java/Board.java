@@ -262,6 +262,7 @@ public class Board {
         int leftMoveKey = getKeyLeft(moveKey);
         int rightMoveKey = getKeyRight(moveKey);
         log.info("left/right moveKey: " + leftMoveKey + "/" + rightMoveKey);
+
         switch (curPlayer) {
             case 0:
 //                log.info(String.valueOf(red));
@@ -341,17 +342,17 @@ public class Board {
         if (red.containsKey(i)) {
             removeFromRed(i);
             ans = true;
-            log.info("red: removing red stone");
+//            log.info("red: removing red stone");
         }
         if (green.containsKey(i)) {
             removeFromGreen(i);
             ans = true;
-            log.info("red: removing green stone");
+//            log.info("red: removing green stone");
         }
         if (blue.containsKey(i)) {
             removeFromBlue(i);
             ans = true;
-            log.info("red: removing blue stone");
+//            log.info("red: removing blue stone");
         }
 
 //        switch (curPlayer) {
@@ -602,6 +603,21 @@ public class Board {
     }
 
     int getPointsForPlayerXv1(int playerId) {
+        int ans = -1;
+
+        switch(playerId) {
+            case 0:
+                return red.size() * 100 / 61 + points[0] * 10;
+            case 1:
+                return green.size() * 100 / 61 + points[1] * 10;
+            case 2:
+                return blue.size() * 100 / 61 + points[2] * 10;
+        }
+        return ans;
+    }
+
+//    TODO distance from margin and eaten enemy stones
+    int getPointsForPlayerXv2(int playerId) {
         int ans = -1;
 
         switch(playerId) {

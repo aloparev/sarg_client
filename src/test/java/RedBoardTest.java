@@ -119,7 +119,7 @@ public class RedBoardTest {
 //    }
 
     @Test
-    public void evaluateBoard() {
+    public void getPointsForPlayerXv1() {
         assertEquals(8, bb.getPointsForPlayerXv1(rid));
 
         bb.red.put(1, new Move(0, 1));
@@ -129,6 +129,17 @@ public class RedBoardTest {
         bb.points[rid] = 2;
         assertEquals(31, bb.getPointsForPlayerXv1(rid));
     }
+
+    /*
+    20:50:58.209 [main] INFO  Client - Logic.getBestMoveForOwner: 4,2
+20:50:58.209 [main] INFO  Client - board.updateBoard: 4,2
+20:50:58.209 [main] INFO  Board - red: removing green stone
+20:50:58.209 [main] INFO  Board - left/right moveKey: 31/22
+20:50:58.209 [main] INFO  Client - board after integration: board owner=2 scores=[3, 2, 1] curPlayer=2 expPlayer=0 kicked=[false, false, false] red stones=[1, 11, 43] green stones=[2, 13, 44, 46, 58] blue stones=[20, 22, 31, 41, 63, 74, 75, 76, 85, 87, 88]
+free=[0, 3, 4, 10, 12, 14, 15, 21, 23, 24, 25, 26, 30, 32, 33, 34, 35, 36, 37, 40, 42, 45, 47, 48, 51, 52, 53, 54, 55, 56, 57, 62, 64, 65, 66, 67, 68, 73, 77, 78, 84, 86]
+
+>> find out why not score
+     */
 
     @Test
     public void updatePlayer3() {
