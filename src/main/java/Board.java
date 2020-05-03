@@ -148,9 +148,9 @@ public class Board implements Cloneable {
             add(59);
             add(69);
             add(79);
-            add(89);
+            add(89); //max L
 
-            add(99);
+            add(99); //max R
             add(98);
             add(97);
             add(96);
@@ -158,13 +158,41 @@ public class Board implements Cloneable {
         }};
 
         this.greenMargin = new TreeSet<Integer>() {{
-//            add(5);
+            add(-1); //min R
+            add(9);
+            add(19);
+            add(29);
+            add(39);
 
+            add(50);
+            add(61);
+            add(72);
+            add(83);
+
+            add(94);
+            add(95);
+            add(96);
+            add(97);
+            add(98); //max L
         }};
 
         this.blueMargin = new TreeSet<Integer>() {{
-//            add(5);
+            add(38);
+            add(27);
+            add(16);
+            add(5);
+            add(-6);
 
+            add(-7);
+            add(-8);
+            add(-9);
+            add(-10); //min R
+
+            add(-11); //min L
+            add(-1);
+            add(9);
+            add(19);
+            add(29);
         }};
     }
 
@@ -208,24 +236,67 @@ public class Board implements Cloneable {
     }
 
     /**
-     * shift received move from player map to free map
-     * and simulate user stone change
+     * shift received move from "player" to "free"
+     * and run user stone update
      * @param moveKey of newly received
      */
     void updatePlayer(int moveKey) {
+        int leftMoveKey = getKeyLeft(moveKey);
+        int rightMoveKey = getKeyRight(moveKey);
+
         switch(curPlayer) {
             case 0:
 //                log.info(String.valueOf(red));
-                redMove(moveKey);
+//                redMove(moveKey);
+
+                if(leftMoveKey != -1) {
+//            log.info("redMove.leftMoveKey=" + leftMoveKey);
+                    red.put(leftMoveKey, free.get(leftMoveKey));
+                    free.remove(leftMoveKey);
+                }
+//        log.info(String.valueOf(leftMoveKey));
+//        log.info(String.valueOf(red));
+
+                if(rightMoveKey != -1) {
+                    red.put(rightMoveKey, free.get(rightMoveKey));
+                    free.remove(rightMoveKey);
+//        log.info(String.valueOf(red));
+                }
+
                 removeFromRed(moveKey);
 //                log.info(String.valueOf(red));
                 break;
             case 1:
-                greenMove(moveKey);
+                if(leftMoveKey != -1) {
+//            log.info("redMove.leftMoveKey=" + leftMoveKey);
+                    green.put(leftMoveKey, free.get(leftMoveKey));
+                    free.remove(leftMoveKey);
+                }
+//        log.info(String.valueOf(leftMoveKey));
+//        log.info(String.valueOf(red));
+
+                if(rightMoveKey != -1) {
+                    green.put(rightMoveKey, free.get(rightMoveKey));
+                    free.remove(rightMoveKey);
+//        log.info(String.valueOf(red));
+                }
                 removeFromGreen(moveKey);
                 break;
             case 2:
-                blueMove(moveKey);
+//                blueMove(moveKey);
+
+                if(leftMoveKey != -1) {
+//            log.info("redMove.leftMoveKey=" + leftMoveKey);
+                    blue.put(leftMoveKey, free.get(leftMoveKey));
+                    free.remove(leftMoveKey);
+                }
+//        log.info(String.valueOf(leftMoveKey));
+//        log.info(String.valueOf(red));
+
+                if(rightMoveKey != -1) {
+                    blue.put(rightMoveKey, free.get(rightMoveKey));
+                    free.remove(rightMoveKey);
+                }
                 removeFromBlue(moveKey);
                 break;
         }
@@ -281,23 +352,41 @@ public class Board implements Cloneable {
 
         switch(curPlayer) {
             case 0:
-                for(int i = start; i < 9; i++) {
+                for(int y = start; y < 89; y++) {
 
 //                    stone reached the board end
-                    if (redMargin.contains(i)) {
-//                        log.info("redMargin.contains=" + i);
+                    if (redMargin.contains(y)) {
+//                        log.info("redMargin.contains=" + y);
                         updatePlayerScores();
                         break;
                     }
 
 //                    there is a free spot on the board
-                    if(free.containsKey(i))
-                        return i;
+                    if(free.containsKey(y))
+                        return y;
                 }
                 break;
             case 1:
+                for(int i = start; i < 98; i=i+10) {
+                    if (greenMargin.contains(i)) {
+//                        log.info("redMargin.contains=" + i);
+                        updatePlayerScores();
+                        break;
+                    }
+                    if (free.containsKey(i))
+                        return i;
+                }
                 break;
             case 2:
+                for(int i = start; i > -11; i=i-11) {
+                    if (greenMargin.contains(i)) {
+//                        log.info("redMargin.contains=" + i);
+                        updatePlayerScores();
+                        break;
+                    }
+                    if (free.containsKey(i))
+                        return i;
+                }
                 break;
         }
         return ans;
@@ -321,8 +410,26 @@ public class Board implements Cloneable {
                 }
                 break;
             case 1:
+                for(int y = start; y > -1; y--) {
+                    if (greenMargin.contains(y)) {
+//                        log.info("redMargin.contains=" + y);
+                        updatePlayerScores();
+                        break;
+                    }
+                    if (free.containsKey(y))
+                        return y;
+                }
                 break;
             case 2:
+                for(int x = start; x > -10; x=x-10) {
+                    if (blueMargin.contains(x)) {
+//                        log.info("redMargin.contains=" + x);
+                        updatePlayerScores();
+                        break;
+                    }
+                    if (free.containsKey(x))
+                        return x;
+                }
                 break;
         }
         return ans;
