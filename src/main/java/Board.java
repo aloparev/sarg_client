@@ -342,21 +342,43 @@ public class Board {
         free.remove(moveKey);
     }
 
-    void stoneRemover(int i) {
-        switch(curPlayer) {
+    boolean stoneRemover(int i) {
+        boolean ans = false;
+
+        switch (curPlayer) {
             case 0:
-                if(green.containsKey(i)) removeFromGreen(i);
-                if(blue.containsKey(i)) removeFromBlue(i);
+                if (green.containsKey(i)) {
+                    removeFromGreen(i);
+                    ans = true;
+                    log.info("red: removing green stone");
+                }
+                if (blue.containsKey(i)) {
+                    removeFromBlue(i);
+                    ans = true;
+                }
                 break;
             case 1:
-                    if(red.containsKey(i)) removeFromRed(i);
-                    if(blue.containsKey(i)) removeFromBlue(i);
+                if (red.containsKey(i)) {
+                    removeFromRed(i);
+                    ans = true;
+                }
+                if (blue.containsKey(i)) {
+                    removeFromBlue(i);
+                    ans = true;
+                }
                 break;
             case 2:
-                    if(red.containsKey(i)) removeFromRed(i);
-                    if(green.containsKey(i)) removeFromGreen(i);
+                if (red.containsKey(i)) {
+                    removeFromRed(i);
+                    ans = true;
+                }
+                if (green.containsKey(i)) {
+                    removeFromGreen(i);
+                    ans = true;
+                }
                 break;
         }
+        return ans;
     }
 
     /**
@@ -388,23 +410,30 @@ public class Board {
         switch(curPlayer) {
             case 0:
                 for(int i = start; i < 89; i++) {
-                    stoneRemover(i);
+                    log.info("i=" + i);
+
+                    if(stoneRemover(i))
+                        continue;
 
 //                    stone reached the board end
                     if (redMargin.contains(i)) {
-//                        log.info("redMargin.contains=" + i);
+                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
                         break;
                     }
 
 //                    there is a free spot on the board
-                    if(free.containsKey(i))
+                    if(free.containsKey(i)) {
+                        log.info("free.contains=" + i);
                         return i;
+                    }
                 }
                 break;
             case 1:
                 for(int i = start; i < 98; i=i+10) {
-                    stoneRemover(i);
+
+                    if(stoneRemover(i))
+                        continue;
                     if (greenMargin.contains(i)) {
 //                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
@@ -416,7 +445,9 @@ public class Board {
                 break;
             case 2:
                 for(int i = start; i > -11; i=i-11) {
-                    stoneRemover(i);
+
+                    if(stoneRemover(i))
+                        continue;
                     if (greenMargin.contains(i)) {
 //                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
@@ -436,7 +467,9 @@ public class Board {
         switch(curPlayer) {
             case 0:
                 for(int i = start; i < 99; i = i+11) {
-                    stoneRemover(i);
+
+                    if(stoneRemover(i))
+                        continue;
 
                     if (redMargin.contains(i)) {
                         updateCurrPlayerScores();
@@ -450,7 +483,9 @@ public class Board {
                 break;
             case 1:
                 for(int i = start; i > -1; i--) {
-                    stoneRemover(i);
+
+                    if(stoneRemover(i))
+                        continue;
                     if (greenMargin.contains(i)) {
 //                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
@@ -462,7 +497,9 @@ public class Board {
                 break;
             case 2:
                 for(int i = start; i > -10; i=i-10) {
-                    stoneRemover(i);
+
+                    if(stoneRemover(i))
+                        continue;
                     if (blueMargin.contains(i)) {
 //                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();

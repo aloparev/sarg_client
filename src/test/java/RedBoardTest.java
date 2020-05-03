@@ -74,6 +74,9 @@ public class RedBoardTest {
 
     @Test
     public void getKeyLeft3() {
+        bb.red.put(move3key, move3);
+        bb.free.remove(move3key);
+
         assertEquals(-1, bb.getKeyLeft(move3key));
     }
 
