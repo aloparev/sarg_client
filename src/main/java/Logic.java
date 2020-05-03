@@ -11,7 +11,7 @@ import java.util.*;
 public class Logic {
     static Logger log = LoggerFactory.getLogger(Logic.class);
 
-    static Move getBestMove(Board baseBoard) {
+    static Move getBestMoveForOwner(Board baseBoard) {
         int bestPoints = -1;
         int bestMoveKey = -1;
         int points;
@@ -38,6 +38,7 @@ public class Logic {
         if(moves.isEmpty())
             return new Move(-1, -1);
         else {
+            log.info("moves to inspect: " + moves);
             size = moves.size();
             threads = new Thread[size];
             scores = new int[size];
@@ -90,24 +91,24 @@ public class Logic {
         if (depth <= 0)
             return bestPoints;
 
-        log.info("bb before: " + bb);
+//        log.info("bb before: " + bb);
         bb.updateBoard(moveKey);
-        log.info("bb after my move: " + bb);
+//        log.info("bb after my move: " + bb);
 
 //        while (bb.expPlayer != bb.owner) {
             if(!bb.kicked[bb.expPlayer]) {
                 firstEnemyMove = getBestRankedMoveFromScope(bb, bb.expPlayer).moveKey;
                 bb.updateBoard(firstEnemyMove);
             }
-            log.info("enemy move 1=" + firstEnemyMove);
-            log.info("bb updated enemy1: " + bb);
+//            log.info("enemy move 1=" + firstEnemyMove);
+//            log.info("bb updated enemy1: " + bb);
 
             if(!bb.kicked[bb.expPlayer]) {
                 secondEnemyMove = getBestRankedMoveFromScope(bb, bb.expPlayer).moveKey;
                 bb.updateBoard(secondEnemyMove);
             }
-        log.info("enemy move 2=" + firstEnemyMove);
-        log.info("bb updated enemy2: " + bb);
+//        log.info("enemy move 2=" + firstEnemyMove);
+//        log.info("bb updated enemy2: " + bb);
 
 //        }
 
@@ -127,13 +128,13 @@ public class Logic {
 //        List<Move> moves = new ArrayList<>(size);
 //        int[] scores = new int[size];
 //        TreeSet<Integer> bestPoints = new TreeSet<>();
-        log.info("searching best move from scope for user=" + playerId + " and board=" + root);
+//        log.info("find best move from scope for user=" + playerId + " and board=" + root);
 
         switch(playerId) {
             case 0:
                 moves = new ArrayList<>(root.red.keySet());
 //                moves = root.red;
-                log.info("moves init=" + moves);
+//                log.info("moves init=" + moves);
                 break;
             case 1:
 //                moves = root.green;
@@ -148,18 +149,20 @@ public class Logic {
         if(moves.isEmpty())
             return new RankedMove();
         else {
-//            log.info("start args: board=" + root + " pid=" + playerId + " moves.size=" + moves.size());
+            log.info("start args: board=" + root + " pid=" + playerId + " moves.size=" + moves.size());
 
 //            for(Map.Entry<Integer, Move> mm : moves.entrySet())
             for (int moveKey : moves) {
 //                try {
 //                    Board branch = root.clone();
                     branch = new Board(root);
-                    log.info("branch before=" + branch);
+//                    log.info("branch before=" + branch);
                     branch.updateBoard(moveKey);
+                    log.info("board after moveKey update[" + moveKey + "]: " + branch);
                     points = branch.getPointsForPlayerXv1(playerId);
 
                     if (points > bestPoints) {
+                        log.info("move=" + moveKey + ": " + points + " > " + bestPoints);
                         bestPoints = points;
                         bestMoveKey = moveKey;
                     }

@@ -4,8 +4,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.*;
 
 public class LogicTest {
@@ -32,7 +30,17 @@ public class LogicTest {
 
     @Test
     public void getBestMove() {
-        Move bestMove = Logic.getBestMove(bb);
+        Move bestMove = Logic.getBestMoveForOwner(bb);
+        log.info(bestMove.toString());
+        assertEquals(0, bestMove.x + bestMove.y);
+    }
+
+    @Test
+    public void getBestMovePreferScoring() {
+        bb.red.put(move3key, move3);
+        bb.free.remove(move3key);
+
+        Move bestMove = Logic.getBestMoveForOwner(bb);
         log.info(bestMove.toString());
     }
 
@@ -71,5 +79,15 @@ public class LogicTest {
         RankedMove rm = Logic.getBestRankedMoveFromScope(bb, bb.owner);
         log.info(rm.toString());
         assertEquals(0, rm.moveKey);
+    }
+
+    @Test
+    public void getBestRankedMoveFromScope3() {
+        bb.red.put(move3key, move3);
+        bb.free.remove(move3key);
+
+        RankedMove rm = Logic.getBestRankedMoveFromScope(bb, bb.owner);
+        log.info(rm.toString());
+        assertEquals(3, rm.moveKey);
     }
 }

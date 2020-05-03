@@ -4,8 +4,6 @@ import lenz.htw.sarg.net.NetworkClient;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +47,7 @@ public class Client {
 //                log.info("x=" + x + " y=" + y);
 //                nc.sendMove(new Move(x,y));
 
-                newMove = Logic.getBestMove(board);
+                newMove = Logic.getBestMoveForOwner(board);
                 nc.sendMove(newMove);
             }
             else {

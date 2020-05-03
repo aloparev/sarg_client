@@ -73,6 +73,11 @@ public class RedBoardTest {
     }
 
     @Test
+    public void getKeyLeft3() {
+        assertEquals(-1, bb.getKeyLeft(move3key));
+    }
+
+    @Test
     public void getKeyRight0() {
         assertEquals(11, bb.getKeyRight(move0key));
     }
