@@ -261,39 +261,35 @@ public class Board {
     void updatePlayer(int moveKey) {
         int leftMoveKey = getKeyLeft(moveKey);
         int rightMoveKey = getKeyRight(moveKey);
-
-        switch(curPlayer) {
+        log.info("left/right moveKey: " + leftMoveKey + "/" + rightMoveKey);
+        switch (curPlayer) {
             case 0:
 //                log.info(String.valueOf(red));
 //                redMove(moveKey);
-
-                if(leftMoveKey != -1) {
+                if (leftMoveKey != -1) {
 //            log.info("redMove.leftMoveKey=" + leftMoveKey);
                     red.put(leftMoveKey, free.get(leftMoveKey));
                     free.remove(leftMoveKey);
                 }
 //        log.info(String.valueOf(leftMoveKey));
 //        log.info(String.valueOf(red));
-
-                if(rightMoveKey != -1) {
+                if (rightMoveKey != -1) {
                     red.put(rightMoveKey, free.get(rightMoveKey));
                     free.remove(rightMoveKey);
 //        log.info(String.valueOf(red));
                 }
-
                 removeFromRed(moveKey);
 //                log.info(String.valueOf(red));
                 break;
             case 1:
-                if(leftMoveKey != -1) {
+                if (leftMoveKey != -1) {
 //            log.info("redMove.leftMoveKey=" + leftMoveKey);
                     green.put(leftMoveKey, free.get(leftMoveKey));
                     free.remove(leftMoveKey);
                 }
 //        log.info(String.valueOf(leftMoveKey));
 //        log.info(String.valueOf(red));
-
-                if(rightMoveKey != -1) {
+                if (rightMoveKey != -1) {
                     green.put(rightMoveKey, free.get(rightMoveKey));
                     free.remove(rightMoveKey);
 //        log.info(String.valueOf(red));
@@ -302,16 +298,14 @@ public class Board {
                 break;
             case 2:
 //                blueMove(moveKey);
-
-                if(leftMoveKey != -1) {
+                if (leftMoveKey != -1) {
 //            log.info("redMove.leftMoveKey=" + leftMoveKey);
                     blue.put(leftMoveKey, free.get(leftMoveKey));
                     free.remove(leftMoveKey);
                 }
 //        log.info(String.valueOf(leftMoveKey));
 //        log.info(String.valueOf(red));
-
-                if(rightMoveKey != -1) {
+                if (rightMoveKey != -1) {
                     blue.put(rightMoveKey, free.get(rightMoveKey));
                     free.remove(rightMoveKey);
                 }
@@ -344,40 +338,55 @@ public class Board {
 
     boolean stoneRemover(int i) {
         boolean ans = false;
-
-        switch (curPlayer) {
-            case 0:
-                if (green.containsKey(i)) {
-                    removeFromGreen(i);
-                    ans = true;
-                    log.info("red: removing green stone");
-                }
-                if (blue.containsKey(i)) {
-                    removeFromBlue(i);
-                    ans = true;
-                }
-                break;
-            case 1:
-                if (red.containsKey(i)) {
-                    removeFromRed(i);
-                    ans = true;
-                }
-                if (blue.containsKey(i)) {
-                    removeFromBlue(i);
-                    ans = true;
-                }
-                break;
-            case 2:
-                if (red.containsKey(i)) {
-                    removeFromRed(i);
-                    ans = true;
-                }
-                if (green.containsKey(i)) {
-                    removeFromGreen(i);
-                    ans = true;
-                }
-                break;
+        if (red.containsKey(i)) {
+            removeFromRed(i);
+            ans = true;
+            log.info("red: removing red stone");
         }
+        if (green.containsKey(i)) {
+            removeFromGreen(i);
+            ans = true;
+            log.info("red: removing green stone");
+        }
+        if (blue.containsKey(i)) {
+            removeFromBlue(i);
+            ans = true;
+            log.info("red: removing blue stone");
+        }
+
+//        switch (curPlayer) {
+//            case 0:
+//                if (green.containsKey(i)) {
+//                    removeFromGreen(i);
+//                    ans = true;
+//                    log.info("red: removing green stone");
+//                }
+//                if (blue.containsKey(i)) {
+//                    removeFromBlue(i);
+//                    ans = true;
+//                }
+//                break;
+//            case 1:
+//                if (red.containsKey(i)) {
+//                    removeFromRed(i);
+//                    ans = true;
+//                }
+//                if (blue.containsKey(i)) {
+//                    removeFromBlue(i);
+//                    ans = true;
+//                }
+//                break;
+//            case 2:
+//                if (red.containsKey(i)) {
+//                    removeFromRed(i);
+//                    ans = true;
+//                }
+//                if (green.containsKey(i)) {
+//                    removeFromGreen(i);
+//                    ans = true;
+//                }
+//                break;
+//        }
         return ans;
     }
 
@@ -409,28 +418,28 @@ public class Board {
 
         switch(curPlayer) {
             case 0:
-                for(int i = start; i < 89; i++) {
-                    log.info("i=" + i);
+                for(int i = start+1; i < 89; i++) {
+//                    log.info("i=" + i);
 
                     if(stoneRemover(i))
                         continue;
 
 //                    stone reached the board end
                     if (redMargin.contains(i)) {
-                        log.info("redMargin.contains=" + i);
+//                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
                         break;
                     }
 
 //                    there is a free spot on the board
                     if(free.containsKey(i)) {
-                        log.info("free.contains=" + i);
+//                        log.info("free.contains=" + i);
                         return i;
                     }
                 }
                 break;
             case 1:
-                for(int i = start; i < 98; i=i+10) {
+                for(int i = start+10; i < 98; i=i+10) {
 
                     if(stoneRemover(i))
                         continue;
@@ -444,7 +453,7 @@ public class Board {
                 }
                 break;
             case 2:
-                for(int i = start; i > -11; i=i-11) {
+                for(int i = start-11; i > -11; i=i-11) {
 
                     if(stoneRemover(i))
                         continue;
@@ -466,7 +475,7 @@ public class Board {
 
         switch(curPlayer) {
             case 0:
-                for(int i = start; i < 99; i = i+11) {
+                for(int i = start+11; i < 99; i = i+11) {
 
                     if(stoneRemover(i))
                         continue;
@@ -482,7 +491,7 @@ public class Board {
                 }
                 break;
             case 1:
-                for(int i = start; i > -1; i--) {
+                for(int i = start-1; i > -1; i--) {
 
                     if(stoneRemover(i))
                         continue;
@@ -496,7 +505,7 @@ public class Board {
                 }
                 break;
             case 2:
-                for(int i = start; i > -10; i=i-10) {
+                for(int i = start-10; i > -10; i=i-10) {
 
                     if(stoneRemover(i))
                         continue;

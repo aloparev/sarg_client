@@ -24,7 +24,7 @@ public class Client {
         boolean gameIsRunning = true;
 
         Logger log = LoggerFactory.getLogger(Client.class);
-        log.info("client up :)\thost=" + host + " team=" + teamName + " picture=" + picPath);
+        log.info("client up and running :)\n\thost=" + host + " team=" + teamName + " picture=" + picPath);
 
         // initialisieren... z.B. Spielbrett
         NetworkClient nc = new NetworkClient(host, teamName, ImageIO.read(new File(picPath)));
@@ -46,12 +46,13 @@ public class Client {
 //                sc.close();
 //                log.info("x=" + x + " y=" + y);
 //                nc.sendMove(new Move(x,y));
-
+                System.in.read();
                 newMove = Logic.getBestMoveForOwner(board);
+                log.info("Logic.getBestMoveForOwner: " + newMove);
                 nc.sendMove(newMove);
             }
             else {
-                log.info("integriereZugInSpielbrett: " + newMove);
+                log.info("board.updateBoard: " + newMove);
                 if(newMove.y == -1) {
                     gameIsRunning = false;
                     log.info("game over!");

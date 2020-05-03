@@ -38,7 +38,7 @@ public class Logic {
         if(moves.isEmpty())
             return new Move(-1, -1);
         else {
-            log.info("moves to inspect: " + moves);
+//            log.info("moves to inspect: " + moves);
             size = moves.size();
             threads = new Thread[size];
             scores = new int[size];
@@ -52,7 +52,7 @@ public class Logic {
                 threads[i] = new Thread(() -> {
                     try {
                         scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, 1, -1);
-                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner);
+//                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner);
 //                    } catch (CloneNotSupportedException cnse) {
 //                        cnse.printStackTrace();
 //                        System.out.println("Running thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner + " failed");
@@ -66,7 +66,7 @@ public class Logic {
             for (int i = 0; i < size; i++) {
                 try {
                     threads[i].join(); //wait till work finished
-                    log.info("END thread[" + i + "] updated score[" + i + "] to " + scores[i]);
+//                    log.info("END thread[" + i + "] updated score[" + i + "] to " + scores[i]);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -113,7 +113,7 @@ public class Logic {
 //        }
 
         RankedMove rankedMove = getBestRankedMoveFromScope(bb, bb.owner);
-        log.info("rm=" + rankedMove);
+//        log.info("rm=" + rankedMove);
         return getMovePointsForDepthX(bb, rankedMove.moveKey, depth-1, rankedMove.points);
     }
 
@@ -149,7 +149,7 @@ public class Logic {
         if(moves.isEmpty())
             return new RankedMove();
         else {
-            log.info("start args: board=" + root + " pid=" + playerId + " moves.size=" + moves.size());
+//            log.info("start args: board=" + root + " pid=" + playerId + " moves.size=" + moves.size());
 
 //            for(Map.Entry<Integer, Move> mm : moves.entrySet())
             for (int moveKey : moves) {
@@ -158,11 +158,11 @@ public class Logic {
                     branch = new Board(root);
 //                    log.info("branch before=" + branch);
                     branch.updateBoard(moveKey);
-                    log.info("board after moveKey update[" + moveKey + "]: " + branch);
+//                    log.info("board after moveKey update[" + moveKey + "]: " + branch);
                     points = branch.getPointsForPlayerXv1(playerId);
 
                     if (points > bestPoints) {
-                        log.info("move=" + moveKey + ": " + points + " > " + bestPoints);
+//                        log.info("move=" + moveKey + ": " + points + " > " + bestPoints);
                         bestPoints = points;
                         bestMoveKey = moveKey;
                     }

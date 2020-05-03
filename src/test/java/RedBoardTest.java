@@ -62,8 +62,7 @@ public class RedBoardTest {
             put(40, new Move(4, 0));
         }};
 
-//        log.info("boards.red=" + bb.red);
-//        log.info("boards.free=" + bb.free);
+        log.info("board after updatePlayer: " + bb);
         assertTrue(expectedRedStones.keySet().equals(bb.red.keySet()));
     }
 
@@ -100,24 +99,24 @@ public class RedBoardTest {
         assertTrue(expectedRedStones.keySet().equals(bb.red.keySet()));
     }
 
-    @Test
-    public void redMove0() {
-        TreeMap<Integer, Move> expectedRedStones;
-        expectedRedStones = new TreeMap<Integer, Move>() {{
-            put(1, new Move(0, 1));
-            put(11, new Move(1, 1));
-
-            put(0, new Move(0, 0));
-            put(10, new Move(1, 0));
-            put(20, new Move(2, 0));
-            put(30, new Move(3, 0));
-            put(40, new Move(4, 0));
-        }};
-
-        bb.redMove(move0key);
-//        log.info("boards.red=" + bb.red);
-        assertTrue(expectedRedStones.keySet().equals(bb.red.keySet()));
-    }
+//    @Test
+//    public void redMove0() {
+//        TreeMap<Integer, Move> expectedRedStones;
+//        expectedRedStones = new TreeMap<Integer, Move>() {{
+//            put(1, new Move(0, 1));
+//            put(11, new Move(1, 1));
+//
+//            put(0, new Move(0, 0));
+//            put(10, new Move(1, 0));
+//            put(20, new Move(2, 0));
+//            put(30, new Move(3, 0));
+//            put(40, new Move(4, 0));
+//        }};
+//
+//        bb.redMove(move0key);
+////        log.info("boards.red=" + bb.red);
+//        assertTrue(expectedRedStones.keySet().equals(bb.red.keySet()));
+//    }
 
     @Test
     public void evaluateBoard() {
