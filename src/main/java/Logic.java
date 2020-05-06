@@ -123,7 +123,7 @@ public class Logic {
         int points;
         Board branch;
 //        TreeMap<Integer, Move> moves = null;
-        List<Integer> moves = Collections.emptyList();
+        List<Integer> moves = null;
 //        int size = root.getStonesAmountOfPlayerX(playerId);
 //        List<Move> moves = new ArrayList<>(size);
 //        int[] scores = new int[size];

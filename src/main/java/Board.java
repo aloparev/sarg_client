@@ -1,6 +1,5 @@
 import lenz.htw.sarg.Move;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -11,9 +10,8 @@ import java.util.TreeSet;
  * since it includes all the crucial elements:
  * who's turn it is, stones positions and score
  */
+@Slf4j
 public class Board {
-    Logger log = LoggerFactory.getLogger(Board.class);
-
     /*
      * all possible moves are stored in different maps
      * when the players move their stones the stone objects are moved from one map to another
