@@ -154,7 +154,7 @@ public class Logic {
             for (int moveKey : moves) {
                     branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsForPlayerXv1(playerId);
+                    points = branch.getPointsForPlayerXv2(playerId);
 
                     if(minimizePoints) points = -1 * points; //max points become min and are ignored
 

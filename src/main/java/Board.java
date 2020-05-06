@@ -259,7 +259,7 @@ public class Board {
     void updatePlayer(int moveKey) {
         int leftMoveKey = getKeyLeft(moveKey);
         int rightMoveKey = getKeyRight(moveKey);
-        log.info("left/right moveKey: " + leftMoveKey + "/" + rightMoveKey);
+//        log.info("left/right moveKey: " + leftMoveKey + "/" + rightMoveKey);
 
         switch (curPlayer) {
             case 0:
@@ -620,11 +620,11 @@ public class Board {
 
         switch(playerId) {
             case 0:
-                return red.size() * 100 / 61 + points[0] * 10;
+                return 100 - (green.size() + blue.size() * 100 / 61) + points[0] * 10;
             case 1:
-                return green.size() * 100 / 61 + points[1] * 10;
+                return 100 - (red.size() + blue.size() * 100 / 61) + points[1] * 10;
             case 2:
-                return blue.size() * 100 / 61 + points[2] * 10;
+                return 100 - (red.size() + green.size() * 100 / 61) + points[2] * 10;
         }
         return ans;
     }
