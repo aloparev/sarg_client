@@ -97,14 +97,14 @@ public class Logic {
 
 //        while (bb.expPlayer != bb.owner) {
             if(!bb.kicked[bb.expPlayer]) {
-                firstEnemyMove = getBestRankedMoveFromScope(bb, bb.expPlayer).moveKey;
+                firstEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
                 bb.updateBoard(firstEnemyMove);
             }
 //            log.info("enemy move 1=" + firstEnemyMove);
 //            log.info("bb updated enemy1: " + bb);
 
             if(!bb.kicked[bb.expPlayer]) {
-                secondEnemyMove = getBestRankedMoveFromScope(bb, bb.expPlayer).moveKey;
+                secondEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
                 bb.updateBoard(secondEnemyMove);
             }
 //        log.info("enemy move 2=" + firstEnemyMove);
@@ -112,23 +112,24 @@ public class Logic {
 
 //        }
 
-        RankedMove rankedMove = getBestRankedMoveFromScope(bb, bb.owner);
+        RankedMove rankedMove = getRankedMoveFromScope(bb, bb.owner, false);
 //        log.info("rm=" + rankedMove);
         return getMovePointsForDepthX(bb, rankedMove.moveKey, depth-1, rankedMove.points);
     }
 
-    static RankedMove getBestRankedMoveFromScope(Board root, int playerId) {
+    /**
+     * used to generate min/max scores
+     * @param root board
+     * @param playerId
+     * @param minimizePoints switcher to find the worse move
+     * @return
+     */
+    static RankedMove getRankedMoveFromScope(Board root, int playerId, boolean minimizePoints) {
         int bestMoveKey = -1;
         int bestPoints = -1;
-        int points;
-        Board branch;
-//        TreeMap<Integer, Move> moves = null;
+        int points = -1;
         List<Integer> moves = null;
-//        int size = root.getStonesAmountOfPlayerX(playerId);
-//        List<Move> moves = new ArrayList<>(size);
-//        int[] scores = new int[size];
-//        TreeSet<Integer> bestPoints = new TreeSet<>();
-//        log.info("find best move from scope for user=" + playerId + " and board=" + root);
+        Board branch;
 
         switch(playerId) {
             case 0:
@@ -146,28 +147,21 @@ public class Logic {
                 break;
         }
 
-        if(moves.isEmpty())
+        if(moves.isEmpty()) //test
             return new RankedMove();
         else {
 //            log.info("start args: board=" + root + " pid=" + playerId + " moves.size=" + moves.size());
-
-//            for(Map.Entry<Integer, Move> mm : moves.entrySet())
             for (int moveKey : moves) {
-//                try {
-//                    Board branch = root.clone();
                     branch = new Board(root);
-//                    log.info("branch before=" + branch);
                     branch.updateBoard(moveKey);
-//                    log.info("board after moveKey update[" + moveKey + "]: " + branch);
                     points = branch.getPointsForPlayerXv1(playerId);
 
+                    if(minimizePoints) points = -1 * points; //max points become min and are ignored
+
                     if (points > bestPoints) {
-//                        log.info("move=" + moveKey + ": " + points + " > " + bestPoints);
                         bestPoints = points;
                         bestMoveKey = moveKey;
                     }
-//                } catch (CloneNotSupportedException ee) {
-//                    ee.printStackTrace();
                 }
         }
 

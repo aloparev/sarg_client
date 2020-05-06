@@ -76,7 +76,7 @@ public class LogicTest {
 
     @Test
     public void getBestRankedMoveFromScope0() {
-        RankedMove rm = Logic.getBestRankedMoveFromScope(bb, bb.owner);
+        RankedMove rm = Logic.getRankedMoveFromScope(bb, bb.owner, false);
         log.info(rm.toString());
         assertEquals(0, rm.moveKey);
     }
@@ -86,7 +86,7 @@ public class LogicTest {
         bb.red.put(move3key, move3);
         bb.free.remove(move3key);
 
-        RankedMove rm = Logic.getBestRankedMoveFromScope(bb, bb.owner);
+        RankedMove rm = Logic.getRankedMoveFromScope(bb, bb.owner, false);
         log.info(rm.toString());
         assertEquals(3, rm.moveKey);
     }
