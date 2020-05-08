@@ -264,56 +264,45 @@ public class Board {
     void updatePlayer(int moveKey) {
         int leftMoveKey = getKeyLeft(moveKey);
         int rightMoveKey = getKeyRight(moveKey);
-//        log.info("left/right moveKey: " + leftMoveKey + "/" + rightMoveKey);
 
 //        if(leftMoveKey != -1 && rightMoveKey != -1)
         switch (curPlayer) {
             case 0:
-//                log.info(String.valueOf(red));
-//                redMove(moveKey);
                 if (leftMoveKey != -1) {
-//            log.info("redMove.leftMoveKey=" + leftMoveKey);
                     red.put(leftMoveKey, free.get(leftMoveKey));
                     free.remove(leftMoveKey);
                 }
-//        log.info(String.valueOf(leftMoveKey));
-//        log.info(String.valueOf(red));
+
                 if (rightMoveKey != -1) {
                     red.put(rightMoveKey, free.get(rightMoveKey));
                     free.remove(rightMoveKey);
-//        log.info(String.valueOf(red));
                 }
+
                 removeFromRed(moveKey);
-//                log.info(String.valueOf(red));
                 break;
             case 1:
                 if (leftMoveKey != -1) {
-//            log.info("redMove.leftMoveKey=" + leftMoveKey);
                     green.put(leftMoveKey, free.get(leftMoveKey));
                     free.remove(leftMoveKey);
                 }
-//        log.info(String.valueOf(leftMoveKey));
-//        log.info(String.valueOf(red));
+
                 if (rightMoveKey != -1) {
                     green.put(rightMoveKey, free.get(rightMoveKey));
                     free.remove(rightMoveKey);
-//        log.info(String.valueOf(red));
                 }
+
                 removeFromGreen(moveKey);
                 break;
             case 2:
-//                blueMove(moveKey);
                 if (leftMoveKey != -1) {
-//            log.info("redMove.leftMoveKey=" + leftMoveKey);
                     blue.put(leftMoveKey, free.get(leftMoveKey));
                     free.remove(leftMoveKey);
                 }
-//        log.info(String.valueOf(leftMoveKey));
-//        log.info(String.valueOf(red));
                 if (rightMoveKey != -1) {
                     blue.put(rightMoveKey, free.get(rightMoveKey));
                     free.remove(rightMoveKey);
                 }
+
                 removeFromBlue(moveKey);
                 break;
         }
@@ -359,39 +348,6 @@ public class Board {
 //            log.info("red: removing blue stone");
         }
 
-//        switch (curPlayer) {
-//            case 0:
-//                if (green.containsKey(i)) {
-//                    removeFromGreen(i);
-//                    ans = true;
-//                    log.info("red: removing green stone");
-//                }
-//                if (blue.containsKey(i)) {
-//                    removeFromBlue(i);
-//                    ans = true;
-//                }
-//                break;
-//            case 1:
-//                if (red.containsKey(i)) {
-//                    removeFromRed(i);
-//                    ans = true;
-//                }
-//                if (blue.containsKey(i)) {
-//                    removeFromBlue(i);
-//                    ans = true;
-//                }
-//                break;
-//            case 2:
-//                if (red.containsKey(i)) {
-//                    removeFromRed(i);
-//                    ans = true;
-//                }
-//                if (green.containsKey(i)) {
-//                    removeFromGreen(i);
-//                    ans = true;
-//                }
-//                break;
-//        }
         return ans;
     }
 
