@@ -395,35 +395,12 @@ public class Board {
         return ans;
     }
 
-    /**
-     * following move is split into left and right
-     * @param moveKey
-     */
-    void redMove(int moveKey) {
-//        log.info("redMove.moveKey=" + moveKey);
-        int leftMoveKey = getKeyLeft(moveKey);
-        if(leftMoveKey != -1) {
-//            log.info("redMove.leftMoveKey=" + leftMoveKey);
-            red.put(leftMoveKey, free.get(leftMoveKey));
-            free.remove(leftMoveKey);
-        }
-//        log.info(String.valueOf(leftMoveKey));
-//        log.info(String.valueOf(red));
-
-        int rightMoveKey = getKeyRight(moveKey);
-        if(rightMoveKey != -1) {
-            red.put(rightMoveKey, free.get(rightMoveKey));
-            free.remove(rightMoveKey);
-//        log.info(String.valueOf(red));
-        }
-    }
-
     int getKeyLeft(int start) {
         int ans = -1;
 
         switch(curPlayer) {
             case 0:
-                for(int i = start+1; i < 89; i++) {
+                for(int i = start+1; i < 90; i++) {
 //                    log.info("i=" + i);
 
                     if(stoneRemover(i))
@@ -444,7 +421,7 @@ public class Board {
                 }
                 break;
             case 1:
-                for(int i = start+10; i < 98; i=i+10) {
+                for(int i = start+10; i < 108; i=i+10) {
 
                     if(stoneRemover(i))
                         continue;
@@ -458,7 +435,7 @@ public class Board {
                 }
                 break;
             case 2:
-                for(int i = start-11; i > -11; i=i-11) {
+                for(int i = start-11; i > -22; i=i-11) {
 
                     if(stoneRemover(i))
                         continue;
@@ -480,7 +457,7 @@ public class Board {
 
         switch(curPlayer) {
             case 0:
-                for(int i = start+11; i < 99; i = i+11) {
+                for(int i = start+11; i < 110; i = i+11) {
 
                     if(stoneRemover(i))
                         continue;
@@ -496,7 +473,7 @@ public class Board {
                 }
                 break;
             case 1:
-                for(int i = start-1; i > -1; i--) {
+                for(int i = start-1; i > -2; i--) {
 
                     if(stoneRemover(i))
                         continue;
@@ -510,7 +487,7 @@ public class Board {
                 }
                 break;
             case 2:
-                for(int i = start-10; i > -10; i=i-10) {
+                for(int i = start-10; i > -20; i=i-10) {
 
                     if(stoneRemover(i))
                         continue;
@@ -525,44 +502,6 @@ public class Board {
                 break;
         }
         return ans;
-    }
-
-    void greenMove(int moveKey) {
-//        log.info("redMove.moveKey=" + moveKey);
-        int leftMoveKey = getKeyLeft(moveKey);
-        if(leftMoveKey != -1) {
-//            log.info("redMove.leftMoveKey=" + leftMoveKey);
-            green.put(leftMoveKey, free.get(leftMoveKey));
-            free.remove(leftMoveKey);
-        }
-//        log.info(String.valueOf(leftMoveKey));
-//        log.info(String.valueOf(red));
-
-        int rightMoveKey = getKeyRight(moveKey);
-        if(rightMoveKey != -1) {
-            green.put(rightMoveKey, free.get(rightMoveKey));
-            free.remove(rightMoveKey);
-//        log.info(String.valueOf(red));
-        }
-    }
-
-    void blueMove(int moveKey) {
-//        log.info("redMove.moveKey=" + moveKey);
-        int leftMoveKey = getKeyLeft(moveKey);
-        if(leftMoveKey != -1) {
-//            log.info("redMove.leftMoveKey=" + leftMoveKey);
-            blue.put(leftMoveKey, free.get(leftMoveKey));
-            free.remove(leftMoveKey);
-        }
-//        log.info(String.valueOf(leftMoveKey));
-//        log.info(String.valueOf(red));
-
-        int rightMoveKey = getKeyRight(moveKey);
-        if(rightMoveKey != -1) {
-            blue.put(rightMoveKey, free.get(rightMoveKey));
-            free.remove(rightMoveKey);
-//        log.info(String.valueOf(red));
-        }
     }
 
     /**
@@ -653,7 +592,9 @@ public class Board {
     public String toString() {
         return "board owner=" + owner + " scores=" + Arrays.toString(points) + " curPlayer=" + curPlayer
                 + " expPlayer=" + expPlayer + " kicked=" + Arrays.toString(kicked)
-                + " red stones=" + red.keySet() + " green stones=" + green.keySet() + " blue stones=" + blue.keySet()
+                + "\nred stones=" + red.keySet()
+                + "\ngreen stones=" + green.keySet()
+                + "\nblue stones=" + blue.keySet()
                 + "\n" + "free=" + free.keySet();
     }
 
