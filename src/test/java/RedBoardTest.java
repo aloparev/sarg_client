@@ -131,14 +131,21 @@ public class RedBoardTest {
     }
 
     /*
-    20:50:58.209 [main] INFO  Client - Logic.getBestMoveForOwner: 4,2
-20:50:58.209 [main] INFO  Client - board.updateBoard: 4,2
-20:50:58.209 [main] INFO  Board - red: removing green stone
-20:50:58.209 [main] INFO  Board - left/right moveKey: 31/22
-20:50:58.209 [main] INFO  Client - board after integration: board owner=2 scores=[3, 2, 1] curPlayer=2 expPlayer=0 kicked=[false, false, false] red stones=[1, 11, 43] green stones=[2, 13, 44, 46, 58] blue stones=[20, 22, 31, 41, 63, 74, 75, 76, 85, 87, 88]
-free=[0, 3, 4, 10, 12, 14, 15, 21, 23, 24, 25, 26, 30, 32, 33, 34, 35, 36, 37, 40, 42, 45, 47, 48, 51, 52, 53, 54, 55, 56, 57, 62, 64, 65, 66, 67, 68, 73, 77, 78, 84, 86]
 
->> find out why not score
+    score f
+red stones=[25, 31, 33, 34, 35, 62]
+green stones=[21, 26, 37, 40, 48]
+blue stones=[44, 45, 54, 64, 77, 88]
+free=[0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 15, 20, 22, 23, 24, 30, 32, 36, 41, 42, 43, 46, 47, 51, 52, 53, 55, 56, 57, 58, 63, 65, 66, 67, 68, 73, 74, 75, 76, 78, 84, 85, 86, 87]
+21:21:16.066 [main] INFO  Client - move=null >> ich bin dran: 0
+
+21:21:19.978 [main] INFO  Client - Logic.getBestMoveForOwner: 3,3
+21:21:19.979 [main] INFO  Client - board.updateBoard: 3,3
+21:21:19.979 [main] INFO  Client - board after integration: board owner=0 scores=[1, 4, 1] curPlayer=0 expPlayer=1 kicked=[false, false, false]
+red stones=[25, 31, 36, 55, 62]
+green stones=[21, 26, 37, 40, 48]
+blue stones=[45, 54, 64, 77, 88]
+free=[0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 15, 20, 22, 23, 24, 30, 32, 33, 34, 35, 41, 42, 43, 44, 46, 47, 51, 52, 53, 56, 57, 58, 63, 65, 66, 67, 68, 73, 74, 75, 76, 78, 84, 85, 86, 87]
      */
 
     @Test

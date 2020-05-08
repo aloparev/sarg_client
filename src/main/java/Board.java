@@ -298,6 +298,7 @@ public class Board {
                     blue.put(leftMoveKey, free.get(leftMoveKey));
                     free.remove(leftMoveKey);
                 }
+
                 if (rightMoveKey != -1) {
                     blue.put(rightMoveKey, free.get(rightMoveKey));
                     free.remove(rightMoveKey);
@@ -364,7 +365,6 @@ public class Board {
 
 //                    stone reached the board end
                     if (redMargin.contains(i)) {
-//                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
                         break;
                     }
@@ -497,8 +497,8 @@ public class Board {
     }
 
     private void updateCurrPlayerScores() {
-//        log.info("scores++");
         points[curPlayer]++;
+        log.info("points for " + curPlayer);
     }
 
     int getPointsForPlayerXv1(int playerId) {
