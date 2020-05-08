@@ -8,7 +8,7 @@ import java.util.TreeSet;
 /**
  * represents the "game configuration"
  * since it includes all the crucial elements:
- * who's turn it is, stones positions and score
+ * who's turn it is, stones and scores
  */
 @Slf4j
 public class Board {
@@ -45,6 +45,7 @@ public class Board {
     int curPlayer;
     int owner;
 
+//    empty initializer
     public Board(int owner) {
         this.owner = owner;
         points = new int[] {0, 0, 0};
@@ -193,6 +194,8 @@ public class Board {
             add(29);
         }};
     }
+
+//    copy constructor
     public Board(Board that) {
 //        non primitives reassignment
         this.free = new TreeMap<>(that.free);
@@ -212,14 +215,14 @@ public class Board {
         this.owner = that.owner;
     }
 
-//    general update work flow
+//    general board update work flow
     void updateBoard(Move newMove) {
 
 //        find key from the received move
         int moveKey = getMoveKey(newMove);
 
 //        find move owner
-        curPlayer = getPlayer(moveKey);
+        curPlayer = getPlayerFromMove(moveKey);
 
 //        sync who's turn it is
         if(expPlayer != curPlayer) {
@@ -232,8 +235,9 @@ public class Board {
         updatePlayer(moveKey);
     }
 
+//    same as above, but with map key as input
     void updateBoard(int moveKey) {
-        curPlayer = getPlayer(moveKey);
+        curPlayer = getPlayerFromMove(moveKey);
 
         if(expPlayer != curPlayer) {
             kicked[expPlayer] = true;
@@ -247,20 +251,22 @@ public class Board {
     void incrementExpPlayer() {
         expPlayer = (expPlayer + 1) % 3;
 
-        if(kicked[expPlayer])
+//        skip kicked players
+        while(kicked[expPlayer])
             expPlayer = (expPlayer + 1) % 3;
     }
 
     /**
      * shift received move from "player" to "free"
      * and run user stone update
-     * @param moveKey of newly received
+     * @param moveKey of new stone
      */
     void updatePlayer(int moveKey) {
         int leftMoveKey = getKeyLeft(moveKey);
         int rightMoveKey = getKeyRight(moveKey);
 //        log.info("left/right moveKey: " + leftMoveKey + "/" + rightMoveKey);
 
+//        if(leftMoveKey != -1 && rightMoveKey != -1)
         switch (curPlayer) {
             case 0:
 //                log.info(String.valueOf(red));
@@ -565,7 +571,7 @@ public class Board {
      * @param moveKey
      * @return
      */
-    int getPlayer(int moveKey) {
+    int getPlayerFromMove(int moveKey) {
         int ans = -1;
 
         if(red.containsKey(moveKey))

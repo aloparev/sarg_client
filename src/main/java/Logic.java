@@ -1,7 +1,5 @@
 import lenz.htw.sarg.Move;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -88,26 +86,17 @@ public class Logic {
         if (depth <= 0)
             return bestPoints;
 
-//        log.info("bb before: " + bb);
         bb.updateBoard(moveKey);
-//        log.info("bb after my move: " + bb);
 
-//        while (bb.expPlayer != bb.owner) {
-            if(!bb.kicked[bb.expPlayer]) {
-                firstEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
-                bb.updateBoard(firstEnemyMove);
-            }
-//            log.info("enemy move 1=" + firstEnemyMove);
-//            log.info("bb updated enemy1: " + bb);
+        if(!bb.kicked[bb.expPlayer]) {
+            firstEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
+            bb.updateBoard(firstEnemyMove);
+        }
 
-            if(!bb.kicked[bb.expPlayer]) {
-                secondEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
-                bb.updateBoard(secondEnemyMove);
-            }
-//        log.info("enemy move 2=" + firstEnemyMove);
-//        log.info("bb updated enemy2: " + bb);
-
-//        }
+        if(!bb.kicked[bb.expPlayer]) {
+            secondEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
+            bb.updateBoard(secondEnemyMove);
+        }
 
         RankedMove rankedMove = getRankedMoveFromScope(bb, bb.owner, false);
 //        log.info("rm=" + rankedMove);
@@ -118,10 +107,9 @@ public class Logic {
      * used to generate min/max scores
      * @param root board
      * @param playerId
-     * @param minimizePoints switcher to find the worse move
      * @return
      */
-    static RankedMove getRankedMoveFromScope(Board root, int playerId, boolean minimizePoints) {
+    static RankedMove getRankedMoveFromScope(Board root, int playerId, boolean minimize) {
         int bestMoveKey = -1;
         int bestPoints = -1;
         int points = -1;
@@ -151,13 +139,12 @@ public class Logic {
             for (int moveKey : moves) {
                     branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsForPlayerXv2(root.owner);
+                    points = branch.getPointsForPlayerXv2(root.curPlayer);
 
-                if(minimizePoints) {
-                    points = -1 * points; //max points become min and are ignored
-                }
-
-                if (points > bestPoints) {
+                if (minimize && points < bestPoints) {
+                    bestPoints = points;
+                    bestMoveKey = moveKey;
+                } else if (points > bestPoints) {
                     bestPoints = points;
                     bestMoveKey = moveKey;
                 }

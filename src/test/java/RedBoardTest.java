@@ -1,4 +1,5 @@
 import lenz.htw.sarg.Move;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -8,9 +9,8 @@ import java.util.TreeMap;
 
 import static org.junit.Assert.*;
 
+@Slf4j
 public class RedBoardTest {
-    Logger log = LoggerFactory.getLogger(RedBoardTest.class);
-
     static Board bb;
 
     static Move move0;
@@ -42,7 +42,7 @@ public class RedBoardTest {
         int moveKey = bb.getMoveKey(move0);
         assertEquals(0, moveKey);
 
-        int player = bb.getPlayer(moveKey);
+        int player = bb.getPlayerFromMove(moveKey);
         assertEquals(0, player);
     }
 

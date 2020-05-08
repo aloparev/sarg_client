@@ -1,14 +1,12 @@
 import lenz.htw.sarg.Move;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
+@Slf4j
 public class LogicTest {
-    Logger log = LoggerFactory.getLogger(LogicTest.class);
-
     static Board bb;
 
     static Move move0;
