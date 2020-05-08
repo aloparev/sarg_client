@@ -1,4 +1,5 @@
 import lenz.htw.sarg.Move;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,18 +9,14 @@ import java.util.*;
  * start threads to work on moves
  * and keep track of the best pick
  */
+@Slf4j
 public class Logic {
-    static Logger log = LoggerFactory.getLogger(Logic.class);
-
     static Move getBestMoveForOwner(Board baseBoard) {
         int bestPoints = -1;
         int bestMoveKey = -1;
-        int points;
         TreeMap<Integer, Move> moves = null;
         int size = -1;
-//        int ii = 0;
         Thread[] threads;
-//        TreeSet<Integer> scores;
         List<Integer> moveKeys;
         int[] scores;
 
@@ -154,15 +151,17 @@ public class Logic {
             for (int moveKey : moves) {
                     branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsForPlayerXv2(playerId);
+                    points = branch.getPointsForPlayerXv2(root.owner);
 
-                    if(minimizePoints) points = -1 * points; //max points become min and are ignored
-
-                    if (points > bestPoints) {
-                        bestPoints = points;
-                        bestMoveKey = moveKey;
-                    }
+                if(minimizePoints) {
+                    points = -1 * points; //max points become min and are ignored
                 }
+
+                if (points > bestPoints) {
+                    bestPoints = points;
+                    bestMoveKey = moveKey;
+                }
+            }
         }
 
 //        log.info("best move from scope is [" + bestMoveKey + "] with points= " + bestPoints);
