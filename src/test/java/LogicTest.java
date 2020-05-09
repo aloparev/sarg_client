@@ -34,7 +34,7 @@ public class LogicTest {
     }
 
     @Test
-    public void getBestMovePreferScoring() {
+    public void getBestMoveShouldPreferScoring() {
         bb.red.put(move3key, move3);
         bb.free.remove(move3key);
 
@@ -53,30 +53,44 @@ public class LogicTest {
         int points = Logic.getMovePointsForDepthX(bb, 10, 1, -1);
         log.info(String.valueOf(points));
     }
+//
+//    @Test
+//    public void getMovePointsForDepthX_20() {
+//        int points = Logic.getMovePointsForDepthX(bb, 20, 1, -1);
+//        log.info(String.valueOf(points));
+//    }
+//
+//    @Test
+//    public void getMovePointsForDepthX_30() {
+//        int points = Logic.getMovePointsForDepthX(bb, 30, 1, -1);
+//        log.info(String.valueOf(points));
+//    }
+//
+//    @Test
+//    public void getMovePointsForDepthX_40() {
+//        int points = Logic.getMovePointsForDepthX(bb, 40, 1, -1);
+//        log.info(String.valueOf(points));
+//    }
 
     @Test
-    public void getMovePointsForDepthX_20() {
-        int points = Logic.getMovePointsForDepthX(bb, 20, 1, -1);
+    public void getMovePointsForDepthFour() {
+        int points = Logic.getMovePointsForDepthX(bb, 0, 4, -1);
         log.info(String.valueOf(points));
     }
 
     @Test
-    public void getMovePointsForDepthX_30() {
-        int points = Logic.getMovePointsForDepthX(bb, 30, 1, -1);
-        log.info(String.valueOf(points));
-    }
-
-    @Test
-    public void getMovePointsForDepthX_40() {
-        int points = Logic.getMovePointsForDepthX(bb, 40, 1, -1);
-        log.info(String.valueOf(points));
-    }
-
-    @Test
-    public void getBestRankedMoveFromScope0() {
+    public void getBestRankedMoveFromScopeZero() {
         RankedMove rm = Logic.getRankedMoveFromScope(bb, bb.owner, false);
         log.info(rm.toString());
         assertEquals(0, rm.moveKey);
+    }
+
+    @Test
+    public void getBestRankedMoveFromScopeOneEleven() {
+        bb.updatePlayer(move0key);
+        RankedMove rm = Logic.getRankedMoveFromScope(bb, bb.owner, false);
+        log.info(rm.toString());
+//        assertEquals(0, rm.moveKey);
     }
 
     @Test

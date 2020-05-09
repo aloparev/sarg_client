@@ -498,7 +498,7 @@ public class Board {
 
     private void updateCurrPlayerScores() {
         points[curPlayer]++;
-        log.info("points for " + curPlayer);
+        log.info("points[" + curPlayer + "]++");
     }
 
     int getPointsForPlayerXv1(int playerId) {
@@ -551,7 +551,8 @@ public class Board {
                 + "\nred stones=" + red.keySet()
                 + "\ngreen stones=" + green.keySet()
                 + "\nblue stones=" + blue.keySet()
-                + "\n" + "free=" + free.keySet();
+                + "\n" + "free=" + free.keySet()
+                + "\n";
     }
 
 //    public Board clone() throws CloneNotSupportedException {

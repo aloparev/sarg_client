@@ -9,6 +9,13 @@ import java.util.*;
  */
 @Slf4j
 public class Logic {
+
+    /**
+     * main driver function to get the best move
+     * makes use of helper methods to get points calculated and moves to be picked from scope
+     * @param baseBoard game board
+     * @return best found move
+     */
     static Move getBestMoveForOwner(Board baseBoard) {
         int bestPoints = -1;
         int bestMoveKey = -1;
@@ -48,9 +55,6 @@ public class Logic {
                     try {
                         scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, 1, -1);
 //                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner);
-//                    } catch (CloneNotSupportedException cnse) {
-//                        cnse.printStackTrace();
-//                        System.out.println("Running thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner + " failed");
                     } catch (NullPointerException npe) {
                         npe.printStackTrace();
                     }
@@ -76,15 +80,16 @@ public class Logic {
     }
 
     /**
-    for all my stones do
-        imitate move
+        for all my stones, imitate moves
         calc enemies best moves with board update
-        based on new board, pick best move
+        based on new board, pick best score for me
      */
     static int getMovePointsForDepthX(Board bb, int moveKey, int depth, int bestPoints) {
-        int firstEnemyMove = -1, secondEnemyMove = -1;
-        if (depth <= 0)
+        if (depth <= 0) //exit condition
             return bestPoints;
+
+        int firstEnemyMove = -1;
+        int secondEnemyMove = -1;
 
         bb.updateBoard(moveKey);
 
@@ -99,22 +104,23 @@ public class Logic {
         }
 
         RankedMove rankedMove = getRankedMoveFromScope(bb, bb.owner, false);
-//        log.info("rm=" + rankedMove);
+//        log.info("in=" + moveKey + " depth=" + depth + " out=" + rankedMove + " bb=" + bb);
         return getMovePointsForDepthX(bb, rankedMove.moveKey, depth-1, rankedMove.points);
     }
 
     /**
-     * used to generate min/max scores
-     * @param root board
-     * @param playerId
-     * @return
+     * given players stones, finds the best or worse move
+     * @param root game board
+     * @param playerId used to chose stones to run scrutiny on,
+     *      the actual points are calculated for "currPlayer"!!!
+     * @param minimize indicates whether we are interested in minimizing
+     * @return found best/worst move
      */
     static RankedMove getRankedMoveFromScope(Board root, int playerId, boolean minimize) {
         int bestMoveKey = -1;
         int bestPoints = -1;
         int points = -1;
         List<Integer> moves = null;
-        Board branch;
 
         switch(playerId) {
             case 0:
@@ -137,7 +143,7 @@ public class Logic {
         else {
 //            log.info("start args: board=" + root + " pid=" + playerId + " moves.size=" + moves.size());
             for (int moveKey : moves) {
-                    branch = new Board(root);
+                    Board branch = new Board(root);
                     branch.updateBoard(moveKey);
                     points = branch.getPointsForPlayerXv2(root.curPlayer);
 
