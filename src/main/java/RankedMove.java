@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class RankedMove {
-    public RankedMove(int moveKey, int points) {
+    public RankedMove(int moveKey, float points) {
         this.moveKey = moveKey;
         this.points = points;
     }
@@ -11,7 +11,7 @@ public class RankedMove {
     }
 
     int moveKey;
-    int points;
+    float points;
 
     @Override
     public String toString() {

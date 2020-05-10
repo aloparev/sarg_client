@@ -2,8 +2,6 @@ import lenz.htw.sarg.Move;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.TreeMap;
 
@@ -119,15 +117,27 @@ public class RedBoardTest {
 //    }
 
     @Test
-    public void getPointsForPlayerXv1() {
-        assertEquals(8, bb.getPointsForPlayerXv1(rid));
+    public void getPointsOne() {
+        assertEquals(8, bb.getPointsOne(rid));
 
         bb.red.put(1, new Move(0, 1));
         bb.red.put(11, new Move(1, 1));
-        assertEquals(11, bb.getPointsForPlayerXv1(rid));
+        assertEquals(11, bb.getPointsOne(rid));
 
-        bb.points[rid] = 2;
-        assertEquals(31, bb.getPointsForPlayerXv1(rid));
+        bb.points[rid] = 2; //7/61 + 100
+        assertEquals(111, bb.getPointsOne(rid));
+    }
+
+    @Test
+    public void getPointsThree() {
+        assertEquals(8, bb.getPointsThree(rid));
+
+        bb.red.put(1, new Move(0, 1));
+        bb.red.put(11, new Move(1, 1));
+        assertEquals(11, bb.getPointsOne(rid));
+
+        bb.points[rid] = 2; //7/61 + 100
+        assertEquals(111, bb.getPointsOne(rid));
     }
 
     /*

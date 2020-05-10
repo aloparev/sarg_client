@@ -44,13 +44,13 @@ public class LogicTest {
 
     @Test
     public void getMovePointsForDepthX_0() {
-        int points = Logic.getMovePointsForDepthX(bb, 0, 1, -1);
+        float points = Logic.getMovePointsForDepthX(bb, 0, 1, -1);
         log.info(String.valueOf(points));
     }
 
     @Test
     public void getMovePointsForDepthX_10() {
-        int points = Logic.getMovePointsForDepthX(bb, 10, 1, -1);
+        float points = Logic.getMovePointsForDepthX(bb, 10, 1, -1);
         log.info(String.valueOf(points));
     }
 //
@@ -74,7 +74,7 @@ public class LogicTest {
 
     @Test
     public void getMovePointsForDepthFour() {
-        int points = Logic.getMovePointsForDepthX(bb, 0, 4, -1);
+        float points = Logic.getMovePointsForDepthX(bb, 0, 4, -1);
         log.info(String.valueOf(points));
     }
 

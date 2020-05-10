@@ -463,8 +463,7 @@ public class Board {
     /**
      * find which map includes the move
      * and thereby player who did the move
-     * @param moveKey
-     * @return
+     * @return player id
      */
     int getPlayerFromMove(int moveKey) {
         int ans = -1;
@@ -484,8 +483,6 @@ public class Board {
     /**
      * extract move coordinates
      * which are used as a map key
-     * @param move
-     * @return
      */
     int getMoveKey(Move move) {
         int ans = 0;
@@ -501,22 +498,48 @@ public class Board {
         log.info("points[" + curPlayer + "]++");
     }
 
-    int getPointsForPlayerXv1(int playerId) {
+    /**
+     * the more stones, the better
+     * plus points count x50
+     */
+    int getPointsOne(int playerId) {
+        int factor50 = 50;
         int ans = -1;
 
         switch(playerId) {
             case 0:
-                return red.size() * 100 / 61 + points[0] * 10;
+                return red.size() * 100 / 61 + points[0] * factor50;
             case 1:
-                return green.size() * 100 / 61 + points[1] * 10;
+                return green.size() * 100 / 61 + points[1] * factor50;
             case 2:
-                return blue.size() * 100 / 61 + points[2] * 10;
+                return blue.size() * 100 / 61 + points[2] * factor50;
         }
         return ans;
     }
 
-//    TODO distance from margin and eaten enemy stones
-    int getPointsForPlayerXv2(int playerId) {
+    /**
+     * shorter distance to the board end is preferred
+     */
+    float getPointsThree(int playerId) {
+        float ans = getPointsOne(playerId);
+
+        switch(playerId) {
+            case 0:
+                ans = getPointsOne(playerId);
+                break;
+            case 1:
+                ans = getPointsOne(playerId);
+                break;
+            case 2:
+                break;
+        }
+        return ans;
+    }
+
+    /**
+     * low enemy presence preferred
+     */
+    int getPointsTwo(int playerId) {
         int ans = -1;
 
         switch(playerId) {

@@ -17,13 +17,13 @@ public class Logic {
      * @return best found move
      */
     static Move getBestMoveForOwner(Board baseBoard) {
-        int bestPoints = -1;
+        float bestPoints = -1;
         int bestMoveKey = -1;
         TreeMap<Integer, Move> moves = null;
         int size = -1;
         Thread[] threads;
         List<Integer> moveKeys;
-        int[] scores;
+        float[] scores;
 
         switch(baseBoard.owner) {
             case 0:
@@ -43,7 +43,7 @@ public class Logic {
 //            log.info("moves to inspect: " + moves);
             size = moves.size();
             threads = new Thread[size];
-            scores = new int[size];
+            scores = new float[size];
             moveKeys = new ArrayList<>(moves.keySet());
 
 //            for(Map.Entry<Integer, Move> mm : moves.entrySet()) {
@@ -84,7 +84,7 @@ public class Logic {
         calc enemies best moves with board update
         based on new board, pick best score for me
      */
-    static int getMovePointsForDepthX(Board bb, int moveKey, int depth, int bestPoints) {
+    static float getMovePointsForDepthX(Board bb, int moveKey, int depth, float bestPoints) {
         if (depth <= 0) //exit condition
             return bestPoints;
 
@@ -118,8 +118,8 @@ public class Logic {
      */
     static RankedMove getRankedMoveFromScope(Board root, int playerId, boolean minimize) {
         int bestMoveKey = -1;
-        int bestPoints = -1;
-        int points = -1;
+        float bestPoints = -1;
+        float points = -1;
         List<Integer> moves = null;
 
         switch(playerId) {
@@ -145,7 +145,7 @@ public class Logic {
             for (int moveKey : moves) {
                     Board branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsForPlayerXv2(root.curPlayer);
+                    points = branch.getPointsTwo(root.curPlayer);
 
                 if (minimize && points < bestPoints) {
                     bestPoints = points;
