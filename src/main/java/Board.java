@@ -1,21 +1,21 @@
 import lenz.htw.sarg.Move;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * represents the "game configuration"
- * since it includes all the crucial elements:
+ * includes all key elements:
  * who's turn it is, stones and scores
  */
 @Slf4j
 public class Board {
+    int owner;
+
     /*
      * all possible moves are stored in different maps
-     * when the players move their stones the stone objects are moved from one map to another
-     * usually it's from <free> to one player or vice versa
+     * when the players move their stones, map entries are shipped around
+     * usually it's from "free" to "player" or vice versa
      */
     TreeMap<Integer, Move> free;
 
@@ -29,21 +29,18 @@ public class Board {
     TreeSet<Integer> blueMargin;
 
     /*
-     * player scores are stored in the array
+     * player scores/kickedStatus are stored in the array
      * where the array index also corresponds to the player id
      * 0=red 1=green 2=blue
      */
     int[] points;
-
     boolean[] kicked;
+
+    //    expected player according to the game
     int expPlayer;
 
-    /*
-     * keeps track of active players
-     * storage analogue to the score array
-     */
+    //    current player according to the move received
     int curPlayer;
-    int owner;
 
 //    empty initializer
     public Board(int owner) {
@@ -311,9 +308,7 @@ public class Board {
 
     void removeFromRed(int moveKey) {
         free.put(moveKey, red.get(moveKey));
-//        log.info(String.valueOf(free));
         red.remove(moveKey);
-//        log.info(String.valueOf(red));
     }
 
     void removeFromGreen(int moveKey) {
@@ -331,8 +326,14 @@ public class Board {
         free.remove(moveKey);
     }
 
+    /**
+     * checks whether there is sth on the path to be removed
+     * @param i move key
+     * @return true if sth was removed
+     */
     boolean stoneRemover(int i) {
         boolean ans = false;
+
         if (red.containsKey(i)) {
             removeFromRed(i);
             ans = true;
@@ -352,6 +353,11 @@ public class Board {
         return ans;
     }
 
+    /**
+     *
+     * @param start made move
+     * @return new left move position
+     */
     int getKeyLeft(int start) {
         int ans = -1;
 
@@ -408,6 +414,11 @@ public class Board {
         return ans;
     }
 
+    /**
+     *
+     * @param start made move
+     * @return new right move position
+     */
     int getKeyRight(int start) {
         int ans = -1;
 
@@ -463,7 +474,7 @@ public class Board {
     /**
      * find which map includes the move
      * and thereby player who did the move
-     * @return player id
+     * @return current player
      */
     int getPlayerFromMove(int moveKey) {
         int ans = -1;
@@ -499,6 +510,7 @@ public class Board {
     }
 
     /**
+     * evaluation f.1
      * the more stones, the better
      * plus points count x50
      */
@@ -518,6 +530,7 @@ public class Board {
     }
 
     /**
+     * evaluation f.3 >> in progress
      * shorter distance to the board end is preferred
      */
     float getPointsThree(int playerId) {
@@ -526,6 +539,7 @@ public class Board {
         switch(playerId) {
             case 0:
                 ans = getPointsOne(playerId);
+                ans += getAvgDistanceFromEnd(playerId);
                 break;
             case 1:
                 ans = getPointsOne(playerId);
@@ -536,7 +550,36 @@ public class Board {
         return ans;
     }
 
+//    or hard encode?
+    float getAvgDistanceFromEnd(int playerId) {
+        List<Integer> moves = new ArrayList<>();
+        float sum = 0;
+
+        switch (playerId) {
+            case 0:
+                moves.addAll(red.keySet());
+                for(int move : moves)
+                    for(int i = move; !redMargin.contains(i); i++)
+                        sum++;
+                break;
+            case 1:
+                moves.addAll(green.keySet());
+                for(int move : moves)
+                    for(int i = move; !redMargin.contains(i); i++)
+                        sum++;
+                break;
+            case 2:
+                moves.addAll(blue.keySet());
+                for(int move : moves)
+                    for(int i = move; !redMargin.contains(i); i++)
+                        sum++;
+                break;
+        }
+        return sum / moves.size();
+    }
+
     /**
+     * evaluation f.2
      * low enemy presence preferred
      */
     int getPointsTwo(int playerId) {
@@ -577,8 +620,4 @@ public class Board {
                 + "\n" + "free=" + free.keySet()
                 + "\n";
     }
-
-//    public Board clone() throws CloneNotSupportedException {
-//        return (Board) super.clone();
-//    }
 }

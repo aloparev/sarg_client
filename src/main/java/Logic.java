@@ -81,8 +81,9 @@ public class Logic {
 
     /**
         for all my stones, imitate moves
-        calc enemies best moves with board update
+        calc enemies best (actually my worst) moves
         based on new board, pick best score for me
+        @param depth to be inspected
      */
     static float getMovePointsForDepthX(Board bb, int moveKey, int depth, float bestPoints) {
         if (depth <= 0) //exit condition
@@ -109,7 +110,7 @@ public class Logic {
     }
 
     /**
-     * given players stones, finds the best or worse move
+     * given player stones, finds the best or worse move
      * @param root game board
      * @param playerId used to chose stones to run scrutiny on,
      *      the actual points are calculated for "currPlayer"!!!

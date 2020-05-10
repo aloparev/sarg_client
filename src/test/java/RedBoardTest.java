@@ -128,16 +128,27 @@ public class RedBoardTest {
         assertEquals(111, bb.getPointsOne(rid));
     }
 
-    @Test
-    public void getPointsThree() {
-        assertEquals(8, bb.getPointsThree(rid));
+//    @Test
+//    public void getPointsThree() {
+//        assertEquals(8, bb.getPointsThree(rid));
+//
+//        bb.red.put(1, new Move(0, 1));
+//        bb.red.put(11, new Move(1, 1));
+//        assertEquals(11, bb.getPointsOne(rid));
+//
+//        bb.points[rid] = 2; //7/61 + 100
+//        assertEquals(111, bb.getPointsOne(rid));
+//    }
 
+    @Test
+    public void getAvgDistanceFromEnd() {
+        assertTrue(7 == bb.getAvgDistanceFromEnd(rid));
+
+//        bb.updateBoard(move0key);
         bb.red.put(1, new Move(0, 1));
         bb.red.put(11, new Move(1, 1));
-        assertEquals(11, bb.getPointsOne(rid));
-
-        bb.points[rid] = 2; //7/61 + 100
-        assertEquals(111, bb.getPointsOne(rid));
+        bb.red.remove(0);
+        assertTrue(6.5 == bb.getAvgDistanceFromEnd(rid));
     }
 
     /*
