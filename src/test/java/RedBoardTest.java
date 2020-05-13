@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 @Slf4j
 public class RedBoardTest {
+    static final double floatDelta = 0.001;
     static Board bb;
 
     static Move move0;
@@ -120,35 +121,36 @@ public class RedBoardTest {
     public void getPointsOne() {
         assertEquals(8, bb.getPointsOne(rid));
 
-        bb.red.put(1, new Move(0, 1));
-        bb.red.put(11, new Move(1, 1));
-        assertEquals(11, bb.getPointsOne(rid));
+        bb.updateBoard(move0key);
+        assertEquals(9, bb.getPointsOne(rid));
 
         bb.points[rid] = 2; //7/61 + 100
-        assertEquals(111, bb.getPointsOne(rid));
+        assertEquals(109, bb.getPointsOne(rid));
     }
 
-//    @Test
-//    public void getPointsThree() {
-//        assertEquals(8, bb.getPointsThree(rid));
-//
-//        bb.red.put(1, new Move(0, 1));
-//        bb.red.put(11, new Move(1, 1));
-//        assertEquals(11, bb.getPointsOne(rid));
-//
-//        bb.points[rid] = 2; //7/61 + 100
-//        assertEquals(111, bb.getPointsOne(rid));
-//    }
+    @Test
+    public void getPointsThreeInit() {
+        assertEquals(2.2, bb.getPointsThree(rid), floatDelta);
+    }
 
     @Test
-    public void getAvgDistanceFromEnd() {
-        assertTrue(7 == bb.getAvgDistanceFromEnd(rid));
+    public void getPointsThreeZero() {
+        bb.updateBoard(move0key);
+        assertEquals(3.5, bb.getPointsThree(rid), floatDelta);
+    }
 
-//        bb.updateBoard(move0key);
-        bb.red.put(1, new Move(0, 1));
-        bb.red.put(11, new Move(1, 1));
-        bb.red.remove(0);
-        assertTrue(6.5 == bb.getAvgDistanceFromEnd(rid));
+    @Test
+    public void getAvgDistanceFromEndInit() {
+        assertEquals(5.8, bb.getAvgDistanceFromEnd(rid), floatDelta);
+    }
+
+    @Test
+    public void getAvgDistanceFromZero() {
+        bb.updateBoard(move0key);
+//        log.info(bb.toString());
+        float ans=bb.getAvgDistanceFromEnd(rid);
+//        log.info("ans="+ans);
+        assertEquals(5.5, ans, floatDelta);
     }
 
     /*

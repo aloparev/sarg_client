@@ -383,7 +383,7 @@ public class Board {
                 }
                 break;
             case 1:
-                for(int i = start+10; i < 108; i=i+10) {
+                for(int i = start+10; i < 108; i+=10) {
 
                     if(stoneRemover(i))
                         continue;
@@ -397,7 +397,7 @@ public class Board {
                 }
                 break;
             case 2:
-                for(int i = start-11; i > -22; i=i-11) {
+                for(int i = start-11; i > -22; i-=11) {
 
                     if(stoneRemover(i))
                         continue;
@@ -424,7 +424,7 @@ public class Board {
 
         switch(curPlayer) {
             case 0:
-                for(int i = start+11; i < 110; i = i+11) {
+                for(int i = start+11; i < 110; i+=11) {
 
                     if(stoneRemover(i))
                         continue;
@@ -534,20 +534,19 @@ public class Board {
      * shorter distance to the board end is preferred
      */
     float getPointsThree(int playerId) {
-        float ans = getPointsOne(playerId);
-
-        switch(playerId) {
-            case 0:
-                ans = getPointsOne(playerId);
-                ans += getAvgDistanceFromEnd(playerId);
-                break;
-            case 1:
-                ans = getPointsOne(playerId);
-                break;
-            case 2:
-                break;
-        }
-        return ans;
+//        float ans = getPointsOne(playerId);
+//
+//        switch(playerId) {
+//            case 0:
+//                ans = getPointsOne(playerId) - getAvgDistanceFromEnd(playerId);
+//                break;
+//            case 1:
+//                ans = getPointsOne(playerId);
+//                break;
+//            case 2:
+//                break;
+//        }
+        return getPointsOne(playerId) - getAvgDistanceFromEnd(playerId);
     }
 
 //    or hard encode?
@@ -559,22 +558,24 @@ public class Board {
             case 0:
                 moves.addAll(red.keySet());
                 for(int move : moves)
-                    for(int i = move; !redMargin.contains(i); i++)
+                    for(int i = move, j = move; !redMargin.contains(i) && !redMargin.contains(j); i++, j+=11)
                         sum++;
                 break;
             case 1:
                 moves.addAll(green.keySet());
                 for(int move : moves)
-                    for(int i = move; !redMargin.contains(i); i++)
+                    for(int i=move, j=move; !greenMargin.contains(i) && !greenMargin.contains(j); i+=10, j--)
                         sum++;
                 break;
             case 2:
                 moves.addAll(blue.keySet());
                 for(int move : moves)
-                    for(int i = move; !redMargin.contains(i); i++)
+                    for(int i = move, j=move; !blueMargin.contains(i) && !blueMargin.contains(j); i-=11, j-=10)
                         sum++;
                 break;
         }
+
+//        log.info("sum=" + sum + " d=" + sum / moves.size());
         return sum / moves.size();
     }
 
