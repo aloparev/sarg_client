@@ -10,6 +10,7 @@ import java.util.*;
 @Slf4j
 public class Logic {
 
+
     /**
      * main driver function to get the best move
      * makes use of helper methods to get points calculated and moves to be picked from scope
@@ -53,7 +54,7 @@ public class Logic {
 
                 threads[i] = new Thread(() -> {
                     try {
-                        scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, 4, -1);
+                        scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, Client.DEPTH_4, -1);
 //                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner);
                     } catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -146,7 +147,7 @@ public class Logic {
             for (int moveKey : moves) {
                     Board branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsThree(root.owner);
+                    points = branch.getPointsTwo(root.owner);
 
                 if (minimize && points < bestPoints) {
                     bestPoints = points;

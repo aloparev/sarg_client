@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
  * main class to call all the other in a while loop
  */
 public class Client {
+    static final int SCORE_FACTOR = 10;
+    static final int DEPTH_4 = 4;
+
     /*
     first connected client gets number 2 and blue color
     second: 1 green
@@ -19,7 +22,7 @@ public class Client {
      */
     public static void main(String[] args) throws IOException {
         String host = "127.0.0.1";
-        String teamName = "f3";
+        String teamName = "f2";
         String picPath = "src/main/resources/blank.jpg";
         boolean gameIsRunning = true;
 
@@ -46,6 +49,7 @@ public class Client {
 //                sc.close();
 //                log.info("x=" + x + " y=" + y);
 //                nc.sendMove(new Move(x,y));
+
 //                System.in.read();
                 newMove = Logic.getBestMoveForOwner(board);
                 log.info("Logic.getBestMoveForOwner: " + newMove);

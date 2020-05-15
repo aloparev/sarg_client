@@ -10,6 +10,7 @@ import java.util.*;
  */
 @Slf4j
 public class Board {
+
     int owner;
 
     /*
@@ -515,16 +516,16 @@ public class Board {
      * plus points count x50
      */
     int getPointsOne(int playerId) {
-        int factor50 = 50;
         int ans = -1;
 
         switch(playerId) {
             case 0:
-                return red.size() * 100 / 61 + points[0] * factor50;
+                //8-100% + points
+                return red.size() * 100 / 61 + points[0] * Client.SCORE_FACTOR;
             case 1:
-                return green.size() * 100 / 61 + points[1] * factor50;
+                return green.size() * 100 / 61 + points[1] * Client.SCORE_FACTOR;
             case 2:
-                return blue.size() * 100 / 61 + points[2] * factor50;
+                return blue.size() * 100 / 61 + points[2] * Client.SCORE_FACTOR;
         }
         return ans;
     }
@@ -583,17 +584,17 @@ public class Board {
      * evaluation f.2
      * low enemy presence preferred
      */
-    int getPointsTwo(int playerId) {
-        int ans = -1;
+    float getPointsTwo(int playerId) {
+        float ans = getPointsOne(playerId) + getAvgDistanceFromEnd(playerId);
+        int enemy1 = (expPlayer+1) % 3;
+        int enemy2 = (expPlayer+2) % 3;
 
-        switch(playerId) {
-            case 0:
-                return 100 - (green.size() + blue.size() * 100 / 61) + points[0] * 10;
-            case 1:
-                return 100 - (red.size() + blue.size() * 100 / 61) + points[1] * 10;
-            case 2:
-                return 100 - (red.size() + green.size() * 100 / 61) + points[2] * 10;
-        }
+        if(!kicked[enemy1])
+            ans = ans - getAvgDistanceFromEnd(enemy1) - points[enemy1];
+
+        if(!kicked[enemy2])
+            ans = ans - getAvgDistanceFromEnd(enemy2) - points[enemy2];
+
         return ans;
     }
 

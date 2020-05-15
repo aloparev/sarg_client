@@ -125,7 +125,7 @@ public class RedBoardTest {
         assertEquals(9, bb.getPointsOne(rid));
 
         bb.points[rid] = 2; //7/61 + 100
-        assertEquals(109, bb.getPointsOne(rid));
+        assertEquals(9+2*Client.SCORE_FACTOR, bb.getPointsOne(rid));
     }
 
     @Test
