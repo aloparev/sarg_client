@@ -171,6 +171,42 @@ blue stones=[45, 54, 64, 77, 88]
 free=[0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 15, 20, 22, 23, 24, 30, 32, 33, 34, 35, 41, 42, 43, 44, 46, 47, 51, 52, 53, 56, 57, 58, 63, 65, 66, 67, 68, 73, 74, 75, 76, 78, 84, 85, 86, 87]
      */
 
+    /*
+    red stones=[10, 11, 12, 20, 30, 40]
+green stones=[1, 13, 14, 15, 26, 37, 48]
+blue stones=[62, 63, 74, 85, 86, 87, 88]
+free=[0, 2, 3, 4, 21, 22, 23, 24, 25, 31, 32, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 47, 51, 52, 53, 54, 55, 56, 57, 58, 64, 65, 66, 67, 68, 73, 75, 76, 77, 78, 84]
+why 40???
+     */
+    @Test
+    public void getPointsThreeWhy40() {
+        bb.removeFromRed(0);
+        bb.red.put(11, new Move(1, 1));
+        bb.red.put(12, new Move(1, 2));
+
+        bb.green.put(1, new Move(0, 1));
+        bb.green.put(13, new Move(1, 3));
+        bb.green.put(14, new Move(1, 4));
+        bb.removeFromGreen(4);
+
+        bb.blue.put(62, new Move(6, 2));
+        bb.blue.put(63, new Move(6, 3));
+        bb.blue.put(74, new Move(7, 4));
+        bb.removeFromBlue(84);
+
+        bb.free.remove(11);
+        bb.free.remove(12);
+        bb.free.remove(1);
+        bb.free.remove(13);
+        bb.free.remove(14);
+        bb.free.remove(62);
+        bb.free.remove(63);
+        bb.free.remove(74);
+
+        log.info("board init: " + bb);
+        log.info("rm=" + Logic.getRankedMoveFromScope(bb, rid, false));
+    }
+
     @Test
     public void updatePlayer3() {
         bb.curPlayer = rid;

@@ -506,7 +506,7 @@ public class Board {
 
     private void updateCurrPlayerScores() {
         points[curPlayer]++;
-        log.info("points[" + curPlayer + "]++");
+//        log.info("points[" + curPlayer + "]++");
     }
 
     /**

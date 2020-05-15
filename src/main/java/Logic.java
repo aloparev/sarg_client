@@ -53,7 +53,7 @@ public class Logic {
 
                 threads[i] = new Thread(() -> {
                     try {
-                        scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, 1, -1);
+                        scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, 4, -1);
 //                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner);
                     } catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -113,7 +113,7 @@ public class Logic {
      * given player stones, finds the best or worse move
      * @param root game board
      * @param playerId used to chose stones to run scrutiny on,
-     *      the actual points are calculated for "currPlayer"!!!
+     *      the actual points are calculated for the board owner (who invokes the f.)
      * @param minimize indicates whether we are interested in minimizing
      * @return found best/worst move
      */
@@ -146,7 +146,7 @@ public class Logic {
             for (int moveKey : moves) {
                     Board branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsTwo(root.curPlayer);
+                    points = branch.getPointsThree(root.owner);
 
                 if (minimize && points < bestPoints) {
                     bestPoints = points;
