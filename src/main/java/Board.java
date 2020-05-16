@@ -10,7 +10,6 @@ import java.util.*;
  */
 @Slf4j
 public class Board {
-
     int owner;
 
     /*
@@ -134,7 +133,11 @@ public class Board {
             put(88, new Move(8, 8));
         }};
 
-//        off the board fields as the absolute destination
+        initMargins();
+    }
+
+    private void initMargins() {
+        //        off the board fields as the absolute destination
         this.redMargin = new TreeSet<Integer>() {{
             add(5);
             add(16);
@@ -211,6 +214,33 @@ public class Board {
         this.expPlayer = that.expPlayer;
         this.curPlayer = that.curPlayer;
         this.owner = that.owner;
+    }
+
+//    init from lists
+    public Board(int owner, int[] points, int curPlayer, int expPlayer, boolean[] kicked, List<Integer> red, List<Integer> green, List<Integer> blue, List<Integer> free) {
+        this.owner = owner;
+        this.points = points.clone();
+        this.kicked = kicked.clone();
+        this.expPlayer = expPlayer;
+        this.curPlayer = curPlayer;
+
+        this.red = new TreeMap<Integer, Move>();
+        for(int mk : red)
+            this.red.put(mk, getMove(mk));
+
+        this.green = new TreeMap<Integer, Move>();
+        for(int mk : green)
+            this.green.put(mk, getMove(mk));
+
+        this.blue = new TreeMap<Integer, Move>();
+        for(int mk : blue)
+            this.blue.put(mk, getMove(mk));
+
+        this.free = new TreeMap<Integer, Move>();
+        for(int mk : free)
+            this.free.put(mk, getMove(mk));
+
+        initMargins();
     }
 
 //    general board update work flow
@@ -385,9 +415,8 @@ public class Board {
                 break;
             case 1:
                 for(int i = start+10; i < 108; i+=10) {
+                    if(stoneRemover(i)) continue;
 
-                    if(stoneRemover(i))
-                        continue;
                     if (greenMargin.contains(i)) {
 //                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
@@ -493,8 +522,7 @@ public class Board {
     }
 
     /**
-     * extract move coordinates
-     * which are used as a map key
+     * extract move coords
      */
     int getMoveKey(Move move) {
         int ans = 0;
@@ -503,6 +531,12 @@ public class Board {
 
         ans = ans + (x * 10) + y;
         return ans;
+    }
+
+    Move getMove(int moveKey) {
+        int x = moveKey / 10;
+        int y = moveKey % 10;
+        return new Move(x, y);
     }
 
     private void updateCurrPlayerScores() {

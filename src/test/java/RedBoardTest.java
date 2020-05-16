@@ -98,25 +98,6 @@ public class RedBoardTest {
         assertTrue(expectedRedStones.keySet().equals(bb.red.keySet()));
     }
 
-//    @Test
-//    public void redMove0() {
-//        TreeMap<Integer, Move> expectedRedStones;
-//        expectedRedStones = new TreeMap<Integer, Move>() {{
-//            put(1, new Move(0, 1));
-//            put(11, new Move(1, 1));
-//
-//            put(0, new Move(0, 0));
-//            put(10, new Move(1, 0));
-//            put(20, new Move(2, 0));
-//            put(30, new Move(3, 0));
-//            put(40, new Move(4, 0));
-//        }};
-//
-//        bb.redMove(move0key);
-////        log.info("boards.red=" + bb.red);
-//        assertTrue(expectedRedStones.keySet().equals(bb.red.keySet()));
-//    }
-
     @Test
     public void getPointsOne() {
         assertEquals(8, bb.getPointsOne(rid));
@@ -232,4 +213,41 @@ why 40???
         assertEquals(1, bb.points[rid]);
     }
 
+//    red stones=[20, 21, 24, 31, 34, 40, 41]
+    @Test
+    public void getMoveFromKey20() {
+        int x=2, y=0;
+        int moveKey = 20;
+        Move move = bb.getMove(moveKey);
+
+        assertEquals(x, move.x);
+        assertEquals(y, move.y);
+    }
+
+    @Test
+    public void getMoveFromKey21() {
+        int x=2, y=1;
+        Move move = bb.getMove(21);
+
+        assertEquals(x, move.x);
+        assertEquals(y, move.y);
+    }
+
+    @Test
+    public void getMoveFromKey31() {
+        int x=3, y=1;
+        Move move = bb.getMove(31);
+
+        assertEquals(x, move.x);
+        assertEquals(y, move.y);
+    }
+
+    @Test
+    public void getMoveFromKey40() {
+        int x=4, y=0;
+        Move move = bb.getMove(40);
+
+        assertEquals(x, move.x);
+        assertEquals(y, move.y);
+    }
 }
