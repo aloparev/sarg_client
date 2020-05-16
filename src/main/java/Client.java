@@ -50,7 +50,7 @@ public class Client {
 //                log.info("x=" + x + " y=" + y);
 //                nc.sendMove(new Move(x,y));
 
-                System.in.read();
+//                System.in.read();
                 newMove = Logic.getBestMoveForOwner(board);
                 log.info("Logic.getBestMoveForOwner: " + newMove);
                 nc.sendMove(newMove);

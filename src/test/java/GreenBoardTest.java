@@ -85,9 +85,14 @@ free=[0, 1, 2, 3, 4, 12, 13, 14, 15, 22, 23, 25, 26, 30, 32, 33, 35, 36, 42, 45,
                 Arrays.asList(10, 11),
                 Arrays.asList(37,43,44,57,63,73),
                 Arrays.asList(0, 1, 2, 3, 4, 12, 13, 14, 15, 22, 23, 25, 26, 30, 32, 33, 35, 36, 42, 45, 46, 47, 48, 51, 52, 53, 54, 55, 56, 58, 62, 64, 65, 66, 67, 68, 74, 75, 76, 77, 78, 84, 85, 86, 87, 88));
-        System.out.println(board.free);
+//        System.out.println(board.free);
         assertTrue(board.free.containsKey(30));
+
         RankedMove rm = Logic.getRankedMoveFromScope(board, gid, false);
         System.out.println(rm);
+
+        board.updateBoard(rm.moveKey);
+//        int left = board.getKeyLeft(rm.moveKey);
+        System.out.println(board);
     }
 }

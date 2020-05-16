@@ -207,6 +207,7 @@ public class Board {
         this.redMargin = that.redMargin;
         this.greenMargin = that.greenMargin;
         this.blueMargin = that.blueMargin;
+//        initMargins();
 
 //        primitives clone
         this.points = that.points.clone();
@@ -225,18 +226,22 @@ public class Board {
         this.curPlayer = curPlayer;
 
         this.red = new TreeMap<Integer, Move>();
+//        red.parallelStream().forEach(x -> this.red.put(x, getMove(x)));
         for(int mk : red)
             this.red.put(mk, getMove(mk));
 
         this.green = new TreeMap<Integer, Move>();
+//        green.parallelStream().forEach(x -> this.green.put(x, getMove(x)));
         for(int mk : green)
             this.green.put(mk, getMove(mk));
 
         this.blue = new TreeMap<Integer, Move>();
+//        blue.parallelStream().forEach(x -> this.blue.put(x, getMove(x)));
         for(int mk : blue)
             this.blue.put(mk, getMove(mk));
 
         this.free = new TreeMap<Integer, Move>();
+//        free.parallelStream().forEach(x -> this.free.put(x, getMove(x)));
         for(int mk : free)
             this.free.put(mk, getMove(mk));
 
@@ -280,8 +285,9 @@ public class Board {
         expPlayer = (expPlayer + 1) % 3;
 
 //        skip kicked players
-        while(kicked[expPlayer])
-            expPlayer = (expPlayer + 1) % 3;
+//        while(kicked[expPlayer])
+//            expPlayer = (expPlayer + 1) % 3;
+        if(kicked[expPlayer]) incrementExpPlayer();
     }
 
     /**
@@ -471,9 +477,8 @@ public class Board {
                 break;
             case 1:
                 for(int i = start-1; i > -2; i--) {
+                    if(stoneRemover(i)) continue;
 
-                    if(stoneRemover(i))
-                        continue;
                     if (greenMargin.contains(i)) {
 //                        log.info("redMargin.contains=" + i);
                         updateCurrPlayerScores();
