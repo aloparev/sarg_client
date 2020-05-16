@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
  * main class to call all the other in a while loop
  */
 public class Client {
-    static final int SCORE_FACTOR = 10;
-    static final int DEPTH_4 = 4;
+    static int SCORE_FACTOR = 10;
+    static int DEPTH = 8;
 
     /*
     first connected client gets number 2 and blue color

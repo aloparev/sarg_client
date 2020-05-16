@@ -130,13 +130,13 @@ public class RedBoardTest {
 
     @Test
     public void getPointsThreeInit() {
-        assertEquals(2.2, bb.getPointsThree(rid), floatDelta);
+        assertEquals(12.2, bb.getPointsThree(rid), floatDelta);
     }
 
     @Test
     public void getPointsThreeZero() {
         bb.updateBoard(move0key);
-        assertEquals(3.5, bb.getPointsThree(rid), floatDelta);
+        assertEquals(13.5, bb.getPointsThree(rid), floatDelta);
     }
 
     @Test

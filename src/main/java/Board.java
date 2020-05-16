@@ -511,9 +511,10 @@ public class Board {
     }
 
     /**
-     * evaluation f.1
+     * evaluation f1
      * the more stones, the better
-     * plus points count x50
+     * plus points count multiplied by factor X
+     * @return range 0-100 + ( 0-5 * SCORE_FACTOR )
      */
     int getPointsOne(int playerId) {
         int ans = -1;
@@ -531,76 +532,71 @@ public class Board {
     }
 
     /**
-     * evaluation f.3 >> in progress
+     * evaluation f3
      * shorter distance to the board end is preferred
+     * @return positive range from f1 - avgD
      */
     float getPointsThree(int playerId) {
-//        float ans = getPointsOne(playerId);
-//
-//        switch(playerId) {
-//            case 0:
-//                ans = getPointsOne(playerId) - getAvgDistanceFromEnd(playerId);
-//                break;
-//            case 1:
-//                ans = getPointsOne(playerId);
-//                break;
-//            case 2:
-//                break;
-//        }
-        return getPointsOne(playerId) - getAvgDistanceFromEnd(playerId);
+        return getPointsOne(playerId) +10- getAvgDistanceFromEnd(playerId);
     }
 
 //    or hard encode?
+
+    /**
+     * @return avgD in range 0-10
+     */
     float getAvgDistanceFromEnd(int playerId) {
-        List<Integer> moves = new ArrayList<>();
-        float sum = 0;
+        if(getMovesSize(playerId) == 0)
+            return 10;
+        else {
+            List<Integer> moves = new ArrayList<>();
+            float sum = 0;
 
-        switch (playerId) {
-            case 0:
-                moves.addAll(red.keySet());
-                for(int move : moves)
-                    for(int i = move, j = move; !redMargin.contains(i) && !redMargin.contains(j); i++, j+=11)
-                        sum++;
-                break;
-            case 1:
-                moves.addAll(green.keySet());
-                for(int move : moves)
-                    for(int i=move, j=move; !greenMargin.contains(i) && !greenMargin.contains(j); i+=10, j--)
-                        sum++;
-                break;
-            case 2:
-                moves.addAll(blue.keySet());
-                for(int move : moves)
-                    for(int i = move, j=move; !blueMargin.contains(i) && !blueMargin.contains(j); i-=11, j-=10)
-                        sum++;
-                break;
-        }
-
+            switch (playerId) {
+                case 0:
+                    moves.addAll(red.keySet());
+                    for (int move : moves)
+                        for (int i = move, j = move; !redMargin.contains(i) && !redMargin.contains(j); i++, j += 11)
+                            sum++;
+                    break;
+                case 1:
+                    moves.addAll(green.keySet());
+                    for (int move : moves)
+                        for (int i = move, j = move; !greenMargin.contains(i) && !greenMargin.contains(j); i += 10, j--)
+                            sum++;
+                    break;
+                case 2:
+                    moves.addAll(blue.keySet());
+                    for (int move : moves)
+                        for (int i = move, j = move; !blueMargin.contains(i) && !blueMargin.contains(j); i -= 11, j -= 10)
+                            sum++;
+                    break;
+            }
 //        log.info("sum=" + sum + " d=" + sum / moves.size());
-        return sum / moves.size();
+            return sum / moves.size();
+        }
     }
 
     /**
-     * evaluation f.2
+     * evaluation f2
      * low enemy presence preferred
+     * @return (+)f1 + avgD - factored scores
      */
     float getPointsTwo(int playerId) {
-        float ans = getPointsOne(playerId) + getAvgDistanceFromEnd(playerId);
-        int enemy1 = (expPlayer+1) % 3;
-        int enemy2 = (expPlayer+2) % 3;
+        float ans = getPointsThree(playerId) + 50;
+        int enemy1 = (playerId+1) % 3;
+        int enemy2 = (playerId+2) % 3;
 
         if(!kicked[enemy1])
-            ans = ans - getAvgDistanceFromEnd(enemy1) - points[enemy1];
+            ans = ans + getAvgDistanceFromEnd(enemy1) - points[enemy1] * Client.SCORE_FACTOR;
 
         if(!kicked[enemy2])
-            ans = ans - getAvgDistanceFromEnd(enemy2) - points[enemy2];
+            ans = ans + getAvgDistanceFromEnd(enemy2) - points[enemy2] * Client.SCORE_FACTOR;
 
         return ans;
     }
 
-    int getStonesAmountOfPlayerX(int playerId) {
-        int ans = -1;
-
+    int getMovesSize(int playerId) {
         switch(playerId) {
             case 0:
                 return red.size();
@@ -609,7 +605,7 @@ public class Board {
             case 2:
                 return blue.size();
         }
-        return ans;
+        return 0;
     }
 
     @Override
