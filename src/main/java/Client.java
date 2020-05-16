@@ -22,7 +22,7 @@ public class Client {
      */
     public static void main(String[] args) throws IOException {
         String host = "127.0.0.1";
-        String teamName = "f2";
+        String teamName = "f1";
         String picPath = "src/main/resources/blank.jpg";
         boolean gameIsRunning = true;
 
@@ -59,7 +59,7 @@ public class Client {
                 log.info("board.updateBoard: " + newMove);
                 if(newMove.y == -1) {
                     gameIsRunning = false;
-                    log.info("game over!");
+                    log.error("game over!");
                 }
 
                 board.updateBoard(newMove);

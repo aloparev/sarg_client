@@ -272,7 +272,7 @@ public class Board {
     void updateBoard(int moveKey) {
         curPlayer = getPlayerFromMove(moveKey);
 
-        if(expPlayer != curPlayer) {
+        if(expPlayer != curPlayer && curPlayer != -1) {
             kicked[expPlayer] = true;
             expPlayer = curPlayer;
         }
@@ -282,12 +282,20 @@ public class Board {
     }
 
     void incrementExpPlayer() {
-        expPlayer = (expPlayer + 1) % 3;
+        int enemy1 = (expPlayer + 1) % 3;
+        int enemy2 = (expPlayer + 2) % 3;
+
+        if(kicked[enemy1] && kicked[enemy2]) return;
+        else if(kicked[enemy1]) expPlayer = (expPlayer + 2) % 3;
+        else expPlayer = (expPlayer + 1) % 3;
+//        System.out.println(expPlayer);
 
 //        skip kicked players
-//        while(kicked[expPlayer])
-//            expPlayer = (expPlayer + 1) % 3;
-        if(kicked[expPlayer]) incrementExpPlayer();
+//        if(kicked[expPlayer]) expPlayer = (expPlayer + 1) % 3;
+//        if(kicked[expPlayer]) {
+//            incrementExpPlayer();
+//            log.info("recursion increment with kicked=" + Arrays.toString(kicked));
+//        }
     }
 
     /**

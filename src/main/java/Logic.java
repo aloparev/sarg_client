@@ -13,10 +13,10 @@ public class Logic {
     /**
      * main driver function to get the best move
      * makes use of helper methods to get points calculated and moves to be picked from scope
-     * @param baseBoard game board
+     * @param root game board
      * @return best found move
      */
-    static Move getBestMoveForOwner(Board baseBoard) {
+    static Move getBestMoveForOwner(Board root) {
         float bestPoints = -1;
         int bestMoveKey = -1;
         TreeMap<Integer, Move> moves = null;
@@ -25,15 +25,15 @@ public class Logic {
         List<Integer> moveKeys;
         float[] scores;
 
-        switch(baseBoard.owner) {
+        switch(root.owner) {
             case 0:
-                moves = baseBoard.red;
+                moves = root.red;
                 break;
             case 1:
-                moves = baseBoard.green;
+                moves = root.green;
                 break;
             case 2:
-                moves = baseBoard.blue;
+                moves = root.blue;
                 break;
         }
 
@@ -53,8 +53,8 @@ public class Logic {
 
                 threads[i] = new Thread(() -> {
                     try {
-                        scores[ii] = getMovePointsForDepthX(new Board(baseBoard), key, Client.DEPTH, -1);
-//                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + baseBoard.owner);
+                        scores[ii] = getMovePointsForDepthX(new Board(root), key, Client.DEPTH, -1);
+//                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + root.owner);
                     } catch (NullPointerException npe) {
                         npe.printStackTrace();
                     }
@@ -85,28 +85,31 @@ public class Logic {
         based on new board, pick best score for me
         @param depth to be inspected
      */
-    static float getMovePointsForDepthX(Board bb, int moveKey, int depth, float bestPoints) {
+    static float getMovePointsForDepthX(Board board, int moveKey, int depth, float bestPoints) {
         if (depth <= 0) //exit condition
             return bestPoints;
 
-        int firstEnemyMove = -1;
-        int secondEnemyMove = -1;
+//        int firstEnemyMove = -1;
+//        int secondEnemyMove = -1;
 
-        bb.updateBoard(moveKey);
+        board.updateBoard(moveKey);
 
-        if(!bb.kicked[bb.expPlayer]) {
-            firstEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
-            bb.updateBoard(firstEnemyMove);
+        try {
+            if (!board.kicked[board.expPlayer]) {
+//            firstEnemyMove = getRankedMoveFromScope(board, board.expPlayer, true).moveKey;
+                board.updateBoard(getRankedMoveFromScope(board, board.expPlayer, true).moveKey);
+            }
+            if (!board.kicked[board.expPlayer]) {
+//            secondEnemyMove = getRankedMoveFromScope(board, board.expPlayer, true).moveKey;
+                board.updateBoard(getRankedMoveFromScope(board, board.expPlayer, true).moveKey);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            log.error("!board.kicked[board.expPlayer] OUT OF BOUND, expPlayer=" + board.expPlayer);
         }
 
-        if(!bb.kicked[bb.expPlayer]) {
-            secondEnemyMove = getRankedMoveFromScope(bb, bb.expPlayer, true).moveKey;
-            bb.updateBoard(secondEnemyMove);
-        }
-
-        RankedMove rankedMove = getRankedMoveFromScope(bb, bb.owner, false);
-//        log.info("in=" + moveKey + " depth=" + depth + " out=" + rankedMove + " bb=" + bb);
-        return getMovePointsForDepthX(bb, rankedMove.moveKey, depth-1, rankedMove.points);
+        RankedMove rankedMove = getRankedMoveFromScope(board, board.owner, false);
+//        log.info("in=" + moveKey + " depth=" + depth + " out=" + rankedMove + " board=" + board);
+        return getMovePointsForDepthX(new Board(board), rankedMove.moveKey, depth-1, rankedMove.points);
     }
 
     /**
@@ -148,7 +151,8 @@ public class Logic {
             for (int moveKey : moves) {
                     Board branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsTwo(root.owner);
+                    points = branch.getPointsOne(root.owner);
+//                    points = branch.getPointsTwo(root.owner);
 
                 if (minimize && points < bestPoints) {
                     bestPoints = points;
