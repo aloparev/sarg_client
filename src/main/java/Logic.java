@@ -51,14 +51,10 @@ public class Logic {
                 int ii = i; //final for thread lambda
                 int key = moveKeys.get(i);
 
-//                ABP
-                Board branch = new Board(root);
-                branch.updateBoard(key);
-
                 threads[i] = new Thread(() -> {
                     try {
-//                        scores[ii] = getMovePointsForDepthX(new Board(root), key, Client.DEPTH, -1);
-                        scores[ii] = min(new Board(branch), Client.DEPTH, Float.MIN_VALUE, Float.MAX_VALUE);
+                        scores[ii] = runMinMax(new Board(root), key, Client.DEPTH, -1);
+//                        scores[ii] = runAlphaBeta(new Board(root), key, Client.DEPTH, -1);
 //                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + root.owner);
                     } catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -84,33 +80,65 @@ public class Logic {
         return moves.get(bestMoveKey);
     }
 
-    /**
-     *
-     * @param bb
-     * @param depth
-     * @param alpha = global max
-     * @param beta = global min
-     * @return
-     */
-    static float min(Board bb, int depth, float alpha, float beta) {
-        if(depth <= 0) return beta;
-
-        float points = -1;
-        float worstPoints = beta;
-        List<Integer> moves = getMovesOfPlayerX(bb, bb.owner);
-
-        if(moves.isEmpty()) //test
-            return alpha;
-        else {
-
-        }
-
-        return 0;
+    static float runAlphaBeta(Board root, int moveKey, int depth, float bestPoints) {
+        Board branch = new Board(root);
+        branch.updateBoard(moveKey);
+        bestPoints = alphaBetaMin(new Board(branch), depth, Float.MIN_VALUE, Float.MAX_VALUE);
+        return bestPoints;
     }
 
-    static float max(Board bb, int depth, float alpha, float beta) {
-        if(depth <= 0) return 0;
-        return 0;
+    /**
+     * @param alpha = global max
+     * @param beta = global min
+     */
+    static float alphaBetaMin(Board root, int depth, float alpha, float beta) {
+        if(depth <= 0) return root.getPoints(root.owner);
+
+        int enemy1 = (root.expPlayer + 1) % 3;
+        int enemy2 = (root.expPlayer + 2) % 3;
+        int[] enemies = new int[] {(root.expPlayer + 1) % 3, (root.expPlayer + 2) % 3};
+        float points = -1;
+        float worstPoints = beta;
+        List<Integer> moves = null;
+
+        for(int enemy : enemies) {
+            if (!root.kicked[enemy]) {
+                moves = getMovesOfPlayerX(root, enemy);
+
+                for (int moveKey : moves) {
+                    Board branch = new Board(root);
+                    branch.updateBoard(moveKey);
+                    points = alphaBetaMax(new Board(branch), depth-1, alpha, worstPoints);
+                    if (points < worstPoints) {
+                        worstPoints = points;
+                        if (worstPoints <= alpha) break;
+                    }
+                }
+            }
+        }
+
+        return worstPoints;
+    }
+
+    static float alphaBetaMax(Board root, int depth, float alpha, float beta) {
+        if(depth <= 0) return root.getPoints(root.owner);
+
+        float points = -1;
+        float bestPoints = beta;
+        List<Integer> moves = getMovesOfPlayerX(root, root.owner);
+
+        for (int moveKey : moves) {
+            Board branch = new Board(root);
+            branch.updateBoard(moveKey);
+            points = alphaBetaMin(new Board(branch), depth-1, bestPoints, beta);
+
+            if (points > bestPoints) {
+                bestPoints = points;
+                if (bestPoints >= beta) break;
+            }
+        }
+
+        return bestPoints;
     }
 
     /**
@@ -119,7 +147,7 @@ public class Logic {
         based on new board, pick best score for me
         @param depth to be inspected
      */
-    static float getMovePointsForDepthX(Board board, int moveKey, int depth, float bestPoints) {
+    static float runMinMax(Board board, int moveKey, int depth, float bestPoints) {
         if (depth <= 0) //exit condition
             return bestPoints;
 
@@ -143,7 +171,7 @@ public class Logic {
 
         RankedMove rankedMove = getRankedMoveFromScope(board, board.owner, false);
 //        log.info("in=" + moveKey + " depth=" + depth + " out=" + rankedMove + " board=" + board);
-        return getMovePointsForDepthX(new Board(board), rankedMove.moveKey, depth-1, rankedMove.points);
+        return runMinMax(new Board(board), rankedMove.moveKey, depth-1, rankedMove.points);
     }
 
     /**
@@ -162,23 +190,7 @@ public class Logic {
 
         float bestPoints = Float.MIN_VALUE;
         if(minimize) bestPoints = Float.MAX_VALUE;
-/*
-        switch(playerId) {
-            case 0:
-                moves = new ArrayList<>(root.red.keySet());
-//                moves = root.red;
-//                log.info("moves init=" + moves);
-                break;
-            case 1:
-//                moves = root.green;
-                moves = new ArrayList<>(root.green.keySet());
-                break;
-            case 2:
-//                moves = root.blue;
-                moves = new ArrayList<>(root.blue.keySet());
-                break;
-        }
-*/
+
         if(moves.isEmpty()) //test
             return new RankedMove();
         else {
@@ -186,7 +198,7 @@ public class Logic {
             for (int moveKey : moves) {
                     Board branch = new Board(root);
                     branch.updateBoard(moveKey);
-                    points = branch.getPointsOne(root.owner);
+                    points = branch.getPoints(root.owner);
 //                    points = branch.getPointsTwo(root.owner);
 
                 if (minimize && points < bestPoints) {

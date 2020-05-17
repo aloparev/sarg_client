@@ -557,6 +557,10 @@ public class Board {
 //        log.info("points[" + curPlayer + "]++");
     }
 
+    float getPoints(int playerId) {
+        return getPointsTwo(playerId);
+    }
+
     /**
      * evaluation f1
      * the more stones, the better
