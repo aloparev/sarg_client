@@ -80,14 +80,23 @@ public class Logic {
         return moves.get(bestMoveKey);
     }
 
+    /**
+     * starts alpha beta cut by using the generic call head from the driver
+     * @param root game board
+     * @param moveKey first branching move
+     * @return max points that can be get following this branch
+     */
     static float runAlphaBeta(Board root, int moveKey, int depth, float bestPoints) {
         Board branch = new Board(root);
         branch.updateBoard(moveKey);
+
+//        start with min cos max was already run on the from driver provided stone
         bestPoints = alphaBetaMin(new Board(branch), depth, Float.MIN_VALUE, Float.MAX_VALUE);
         return bestPoints;
     }
 
     /**
+     * enemies try to minimize the outcome for the target player
      * @param alpha = global max
      * @param beta = global min
      */
@@ -120,6 +129,9 @@ public class Logic {
         return worstPoints;
     }
 
+    /**
+     * target player, i.e. board owner try to get the best points possible
+     */
     static float alphaBetaMax(Board root, int depth, float alpha, float beta) {
         if(depth <= 0) return root.getPoints(root.owner);
 
@@ -142,10 +154,15 @@ public class Logic {
     }
 
     /**
-        for all my stones, imitate moves
-        calc enemies best (actually my worst) moves
-        based on new board, pick best score for me
-        @param depth to be inspected
+     * run min-max alg on the branch without any cuts
+     *
+        the steps are:
+            for all my stones, imitate moves
+            calc enemies best (actually my worst) moves
+            based on new board, pick the best points for me
+        >> the discovery here is that the enemy's best move is not necessarily my worst
+     *
+     * @param depth to be inspected
      */
     static float runMinMax(Board board, int moveKey, int depth, float bestPoints) {
         if (depth <= 0) //exit condition
