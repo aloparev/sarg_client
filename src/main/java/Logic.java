@@ -51,9 +51,14 @@ public class Logic {
                 int ii = i; //final for thread lambda
                 int key = moveKeys.get(i);
 
+//                ABP
+                Board branch = new Board(root);
+                branch.updateBoard(key);
+
                 threads[i] = new Thread(() -> {
                     try {
-                        scores[ii] = getMovePointsForDepthX(new Board(root), key, Client.DEPTH, -1);
+//                        scores[ii] = getMovePointsForDepthX(new Board(root), key, Client.DEPTH, -1);
+                        scores[ii] = min(new Board(branch), Client.DEPTH, Float.MIN_VALUE, Float.MAX_VALUE);
 //                        log.info("START thread[" + ii + "] to inspect key=" + key + " for owner=" + root.owner);
                     } catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -77,6 +82,35 @@ public class Logic {
         }
 
         return moves.get(bestMoveKey);
+    }
+
+    /**
+     *
+     * @param bb
+     * @param depth
+     * @param alpha = global max
+     * @param beta = global min
+     * @return
+     */
+    static float min(Board bb, int depth, float alpha, float beta) {
+        if(depth <= 0) return beta;
+
+        float points = -1;
+        float worstPoints = beta;
+        List<Integer> moves = getMovesOfPlayerX(bb, bb.owner);
+
+        if(moves.isEmpty()) //test
+            return alpha;
+        else {
+
+        }
+
+        return 0;
+    }
+
+    static float max(Board bb, int depth, float alpha, float beta) {
+        if(depth <= 0) return 0;
+        return 0;
     }
 
     /**
@@ -123,11 +157,12 @@ public class Logic {
     static RankedMove getRankedMoveFromScope(Board root, int playerId, boolean minimize) {
         int bestMoveKey = -1;
         float points = -1;
-        List<Integer> moves = null;
+        List<Integer> moves = getMovesOfPlayerX(root, playerId);
+//        List<Integer> moves = null;
 
         float bestPoints = Float.MIN_VALUE;
         if(minimize) bestPoints = Float.MAX_VALUE;
-
+/*
         switch(playerId) {
             case 0:
                 moves = new ArrayList<>(root.red.keySet());
@@ -143,7 +178,7 @@ public class Logic {
                 moves = new ArrayList<>(root.blue.keySet());
                 break;
         }
-
+*/
         if(moves.isEmpty()) //test
             return new RankedMove();
         else {
@@ -166,5 +201,22 @@ public class Logic {
 
 //        log.info("best move from scope is [" + bestMoveKey + "] with points= " + bestPoints);
         return new RankedMove(bestMoveKey, bestPoints);
+    }
+
+    static List<Integer> getMovesOfPlayerX(Board root, int playerId) {
+        switch(playerId) {
+            case 0:
+                return new ArrayList<>(root.red.keySet());
+//                moves = root.red;
+//                log.info("moves init=" + moves);
+            case 1:
+//                moves = root.green;
+                return new ArrayList<>(root.green.keySet());
+            case 2:
+//                moves = root.blue;
+                return new ArrayList<>(root.blue.keySet());
+            default:
+                return new ArrayList<>();
+        }
     }
 }
