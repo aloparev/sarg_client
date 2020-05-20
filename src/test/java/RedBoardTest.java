@@ -100,24 +100,24 @@ public class RedBoardTest {
 
     @Test
     public void getPointsOne() {
-        assertEquals(8, bb.getPointsOne(rid));
+        assertEquals(8, bb.getPointsFieldFraction(rid));
 
         bb.updateBoard(move0key);
-        assertEquals(9, bb.getPointsOne(rid));
+        assertEquals(9, bb.getPointsFieldFraction(rid));
 
         bb.points[rid] = 2; //7/61 + 100
-        assertEquals(9+2*Client.SCORE_FACTOR, bb.getPointsOne(rid));
+        assertEquals(9+2*Client.SCORE_FACTOR, bb.getPointsFieldFraction(rid));
     }
 
     @Test
     public void getPointsThreeInit() {
-        assertEquals(12.2, bb.getPointsThree(rid), floatDelta);
+        assertEquals(12.2, bb.getPointsFieldFractionAndAvgDistanceMy(rid), floatDelta);
     }
 
     @Test
     public void getPointsThreeZero() {
         bb.updateBoard(move0key);
-        assertEquals(13.5, bb.getPointsThree(rid), floatDelta);
+        assertEquals(13.5, bb.getPointsFieldFractionAndAvgDistanceMy(rid), floatDelta);
     }
 
     @Test

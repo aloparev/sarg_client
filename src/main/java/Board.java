@@ -558,7 +558,14 @@ public class Board {
     }
 
     float getPoints(int playerId) {
-        return getPointsTwo(playerId);
+        switch (Client.evaFunc) {
+            case 2:
+                return getPointsFieldFractionAndAvgDistanceAll(playerId);
+            case 3:
+                return getPointsFieldFractionAndAvgDistanceMy(playerId);
+            default:
+                return getPointsFieldFraction(playerId);
+        }
     }
 
     /**
@@ -567,7 +574,7 @@ public class Board {
      * plus points count multiplied by factor X
      * @return range 0-100 + ( 0-5 * SCORE_FACTOR )
      */
-    int getPointsOne(int playerId) {
+    int getPointsFieldFraction(int playerId) {
         int ans = -1;
 
         switch(playerId) {
@@ -587,8 +594,8 @@ public class Board {
      * shorter distance to the board end is preferred
      * @return positive range from f1 - avgD
      */
-    float getPointsThree(int playerId) {
-        return getPointsOne(playerId) +10- getAvgDistanceFromEnd(playerId);
+    float getPointsFieldFractionAndAvgDistanceMy(int playerId) {
+        return getPointsFieldFraction(playerId) +10- getAvgDistanceFromEnd(playerId);
     }
 
 //    or hard encode?
@@ -633,8 +640,8 @@ public class Board {
      * low enemy presence preferred
      * @return (+)f1 + avgD - factored scores
      */
-    float getPointsTwo(int playerId) {
-        float ans = getPointsThree(playerId) + 50;
+    float getPointsFieldFractionAndAvgDistanceAll(int playerId) {
+        float ans = getPointsFieldFractionAndAvgDistanceMy(playerId) + 50;
         int enemy1 = (playerId+1) % 3;
         int enemy2 = (playerId+2) % 3;
 
