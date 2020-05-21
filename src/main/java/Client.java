@@ -4,6 +4,11 @@ import lenz.htw.sarg.net.NetworkClient;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Client {
     static int SCORE_FACTOR = 10;
     static int DEPTH = 8;
+    static final String PIC = "/blank.jpg";
 
     static int evaFunc = 2;
     static String host = "127.0.0.1";
@@ -25,17 +31,23 @@ public class Client {
     second: 1 green
     third: 0 red
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NullPointerException {
         if (args.length != 3) {
             log.error("Three args expected: host, teamName and evaFunc");
         } else {
             host = args[0];
             teamName = args[1];
             evaFunc = Integer.parseInt(args[2]);
+
+//            ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+//            File file = new File(classLoader.getResource(PIC).getFile());
+
             String picPath = "src/main/resources/blank.jpg";
             boolean gameIsRunning = true;
             log.info("client up and running\n\thost=" + host + " team=" + teamName + " evaFunc=" + evaFunc);
             NetworkClient nc = new NetworkClient(host, teamName, ImageIO.read(new File(picPath)));
+//            NetworkClient nc = new NetworkClient(host, teamName, ImageIO.read(file));
+//            NetworkClient nc = new NetworkClient(host, teamName, ImageIO.read(new File(Client.class.getResource(PIC).toURI().getPath())));
             Board board = new Board(nc.getMyPlayerNumber());
 //        nc.getTimeLimitInSeconds();
 //        System.out.println(nc.getExpectedNetworkLatencyInMilliseconds());
