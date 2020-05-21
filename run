@@ -4,16 +4,16 @@ red="RED"
 gre="GREEN"
 blu="BLUE"
 
+sum0=0
 sum1=0
 sum2=0
-sum3=0
 
 res="null"
 SECONDS=0
 
-for i in {0..29}
+for i in {0..49}
 do
-   echo "epoch $((i))"
+#    echo "epoch $((i))"
     nohup java -Djava.library.path=../sarg2/lib/native -jar ../sarg2/sarg.jar 4 headless > log 2>&1 &
     java -jar jar/SargClient.jar 127.0.0.1 ${red} 1 > /dev/null 2>&1 &
     java -jar jar/SargClient.jar 127.0.0.1 ${gre} 2 > /dev/null 2>&1 &
@@ -21,11 +21,11 @@ do
     wait
     res=$(tail -3 log)
 #    printf '\t%s\n' $res
-    if grep -owq "$red: 5" <<< "$res"; then ((sum1++)); fi
-    if grep -owq "$gre: 5" <<< "$res"; then ((sum2++)); fi
-    if grep -owq "$blu: 5" <<< "$res"; then ((sum3++)); fi
+    if grep -owq "$red: 5" <<< "$res"; then ((sum0++)); fi
+    if grep -owq "$gre: 5" <<< "$res"; then ((sum1++)); fi
+    if grep -owq "$blu: 5" <<< "$res"; then ((sum2++)); fi
 done
 
-printf 'final result: %s=%d %s=%d %s=%d\n' $red $sum1 $gre $sum2 $blu $sum3
+printf 'final result: %s=%d %s=%d %s=%d\n' $red $sum0 $gre $sum1 $blu $sum2
 printf 'run time: %d min %d sec\n' $[SECONDS/60] $[SECONDS%60]
 

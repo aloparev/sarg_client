@@ -41,6 +41,13 @@
 <!--            <artifactId>commons-lang</artifactId>-->
 <!--            <version>2.6</version>-->
 <!--        </dependency>-->
+        <dependency>
+            <groupId>sarg2</groupId>
+            <artifactId>sarg-server</artifactId>
+            <scope>system</scope>
+            <version>3.0</version>
+            <systemPath>${basedir}/server/sarg.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>

@@ -5,10 +5,10 @@
 This client implementation contains minimax (https://en.wikipedia.org/wiki/Minimax#Minimax_algorithm_with_alternate_moves) and alpha-beta (https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) search algorithms for the next move. The switch is in the logic getBestMoveForOwner() function.
 
 ## run server
-1. java -Djava.library.path=lib/native -jar sarg.jar 400 900 700 showcoords
+1. java -Djava.library.path=server/lib/native -jar server/sarg.jar 400 900 700 showcoords
 - window mode with coords on the screen
 - 400 sec move time
-2. java -Djava.library.path=lib/native -jar sarg.jar 4 headless
+2. java -Djava.library.path=server/lib/native -jar server/sarg.jar 4 headless
 - windowless mode with four sec for move
 
 ## things that can be improved

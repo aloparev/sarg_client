@@ -1,0 +1,21 @@
+15:46:37.072 [main] INFO  Client - client up and running
+	host=127.0.0.1 Incoming connection from 127.0.0.1
+Welcome ABETA
+ABETA successfully connected
+Server waiting for 2 connections...
+Incoming connection from 127.0.0.1
+Welcome ABETA
+ABETA successfully connected
+Server waiting for 1 connections...
+Incoming connection from 127.0.0.1
+Welcome ABETA
+ABETA successfully connected
+Exception in thread "main" java.lang.RuntimeException: A client failed to connect
+	at lenz.htw.sarg.net.b.a(Unknown Source)
+	at lenz.htw.sarg.b.<init>(Unknown Source)
+	at lenz.htw.sarg.Server.main(Unknown Source)
+Caused by: java.net.SocketException: Broken pipe (Write failed)
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:134)
+	... 3 more
