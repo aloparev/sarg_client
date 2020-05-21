@@ -11,7 +11,7 @@ This client implementation contains minimax (https://en.wikipedia.org/wiki/Minim
 2. java -Djava.library.path=server/lib/native -jar server/sarg.jar 4 headless
 - windowless mode with four sec for move
 
-## things that can be improved
+## improvement ideas
 1. keep key set of move maps as int array only
     - getBestMoveForOwner() keys/moves mess
 2. merge left/right move finder functions in one, using loop with two variables if possible

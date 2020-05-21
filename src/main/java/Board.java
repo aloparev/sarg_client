@@ -557,6 +557,10 @@ public class Board {
 //        log.info("points[" + curPlayer + "]++");
     }
 
+    /*
+    final result: RED=3401 GREEN=1717 BLUE=4883
+    run time: 331 min 33 sec
+     */
     float getPoints(int playerId) {
         switch (Client.evaFunc) {
             case 2:
