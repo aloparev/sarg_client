@@ -3,3 +3,6 @@ out/
 SargClient.iml
 target/
 gruppe.txt
+log
+nohup
+dependency-reduced-pom.xml
