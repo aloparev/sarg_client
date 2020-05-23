@@ -4,12 +4,28 @@
 
 This client implementation contains minimax (https://en.wikipedia.org/wiki/Minimax#Minimax_algorithm_with_alternate_moves) and alpha-beta (https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) search algorithms for the next move. The switch is in the logic getBestMoveForOwner() function.
 
-## run server
-1. java -Djava.library.path=server/lib/native -jar server/sarg.jar 400 900 700 showcoords
+## run
+### server
+```
+java -Djava.library.path=repo/htw/ai/lenz/sarg-server/3.0/lib/native -jar repo/htw/ai/lenz/sarg-server/3.0/sarg-server-3.0.jar 400 900 700 showcoords
+```
 - window mode with coords on the screen
-- 400 sec move time
-2. java -Djava.library.path=server/lib/native -jar server/sarg.jar 4 headless
+- 400 sec move time for analyzing the board
+```
+java -Djava.library.path=lib/native -jar repo/htw/ai/lenz/sarg-server/3.0/sarg-server-3.0.jar 4 headless
+```
 - windowless mode with four sec for move
+### client
+```
+mvn clean package
+java -jar target/SargClient.jar <SERVER_IP> <TEAM_NAME> <EVALUATION_FUNCTION> [1 or 2]
+```
+
+### evaluation script
+The goal of evaluation script if to play the evaluation functions against each other to determine who's the best. The number of games can be adjusted in the for loop. To run, type from project root: 
+```
+./run
+```
 
 ## improvement ideas
 1. keep key set of move maps as int array only

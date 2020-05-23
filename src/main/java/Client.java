@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * main class
- * run: java -jar jar/SargClient.jar 127.0.0.1 abeta 2
  */
 @Slf4j
 public class Client {
@@ -41,7 +40,8 @@ public class Client {
             while (gameIsRunning) {
                 Move newMove = nc.receiveMove();
                 if (newMove == null) {
-                    log.info("move=null >> ich bin dran: " + board.owner);
+//                    log.info("move=null >> ich bin dran: " + board.owner);
+
 //                Scanner sc = new Scanner(System.in);
 //                int x = Integer.parseInt(sc.nextLine());
 //                int y = Integer.parseInt(sc.nextLine());
@@ -49,16 +49,16 @@ public class Client {
 
 //                System.in.read();
                     newMove = Logic.getBestMoveForOwner(board);
-                    log.info("Logic.getBestMoveForOwner: " + newMove);
+//                    log.info("Logic.getBestMoveForOwner: " + newMove);
                     nc.sendMove(newMove);
                 } else {
-                    log.info("board.updateBoard: " + newMove);
+//                    log.info("board.updateBoard: " + newMove);
                     if (newMove.y == -1) {
                         gameIsRunning = false;
                         log.error("GAME OVER");
                     }
                     board.updateBoard(newMove);
-                    log.info("board after integration: " + board);
+//                    log.info("board after integration: " + board);
                 }
             }
         }

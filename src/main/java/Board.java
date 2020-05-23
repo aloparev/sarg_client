@@ -558,17 +558,20 @@ public class Board {
     }
 
     /*
-    final result: RED=3401 GREEN=1717 BLUE=4883
+    final test result after 10k rounds against each other:
+        getPointsFieldFraction=3401
+        getPointsFieldFractionAndAvgDistanceAll=1717
+        getPointsFieldFractionAndAvgDistanceMy=4883 >> set as default
     run time: 331 min 33 sec
      */
     float getPoints(int playerId) {
         switch (Client.evaFunc) {
+            case 1:
+                return getPointsFieldFraction(playerId);
             case 2:
                 return getPointsFieldFractionAndAvgDistanceAll(playerId);
-            case 3:
-                return getPointsFieldFractionAndAvgDistanceMy(playerId);
             default:
-                return getPointsFieldFraction(playerId);
+                return getPointsFieldFractionAndAvgDistanceMy(playerId);
         }
     }
 
